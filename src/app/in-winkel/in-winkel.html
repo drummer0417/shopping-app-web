@@ -1,0 +1,9 @@
+<div>
+    <h2>In de winkel</h2>
+    <p>
+      @for (article of besteldeProducten(); track article.id) {
+
+        <app-in-winkel-item [article] = "article" />
+      }
+    </p>
+ </div>

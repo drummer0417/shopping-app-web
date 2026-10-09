@@ -1,0 +1,21 @@
+
+<p>
+    <strong>
+        {{ article.description }} 
+    </strong>
+    <br>
+    {{ article.shop.name }}, {{ article.brand }}, {{ article.category.description }}, {{ article.uom }}, 
+    {{ article.price | currency: 'EUR' }} 
+    <button type="button"  (click)="onClick()">V</button>
+    
+</p>
+          <!-- ~~~ Brand: {{ article.brand }} ~~~ Omschrijving:
+          {{ article.description }} ~~~ Categorie: {{ article.category.description }}.   -->
+          <!-- Date/timestamp: {{ article.dateModified.toMillis() | date: 'yyyy-MM-dd' }} ~~~ Shop.name:
+          {{ article.shop.name }} ~~~ Price:  {{ article.price | currency:'eu':'symbol' }} -->
+        <!-- </p> -->
+<!-- 
+        <div>
+            <p>{{ article }}
+
+        </div> -->

@@ -1,0 +1,36 @@
+
+<form [formGroup]="form" (ngSubmit)="onGetAllUsers()">
+  <div>
+    <h1>Alle producten</h1>
+    <p> 
+     @for (article of allAricles(); track article.id) {
+        <p>
+          Article ID: {{ article.id }} ~~~ Brand: {{ article.brand }} ~~~ Omschrijving:
+          {{ article.description }} ~~~ Categorie: {{ article.category.description }} ~~~
+          Date/timestamp: {{ article.dateModified.toMillis() | date: 'yyyy-MM-dd' }} ~~~ Shop.name:
+          {{ article.shop.name }} ~~~
+        </p>
+      }
+      </p>
+      <!--     
+    <div>
+      <label for="omschrijving">Omschijving</label>
+      <input type="text" id="omschrijving" formControlName="omschrijving" />
+    </div>    
+    <div>
+      <label for="aantal">Aantal </label>
+      <input type="text" id="äantal" formControlName="aantal" />
+    </div> -->
+    <!-- </p>
+
+    <div>
+      <button type="submit">console.log: articles...</button>
+    </div>
+    <div>
+      <input value="get OrderdArticles" type="button" (click)="onGetOrderdArticles()" />
+    </div> -->
+    <!-- <div>
+       <input value="get all articles" type="button" (click)="onGetArticles()" />
+    </div>  -->
+  <!-- </div>
+</form> -->

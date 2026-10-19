@@ -1,0 +1,23 @@
+<table>
+  <tbody>
+    <tr [class.picked]="product.picked">
+      <td>
+        @if (product.picked) {
+          <mat-icon>check</mat-icon>
+        } @else {
+          {{ product.aantalBesteld }}
+        }
+      </td>
+      <td (click)="onClick()">
+        <strong>
+          {{ product.omschrijving }}
+        </strong>
+        <br />
+        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
+        {{ product.eenheid }}
+      </td>
+      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
+<hr />

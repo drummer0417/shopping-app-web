@@ -1,0 +1,21 @@
+table {
+  width: 98%;
+//   border-collapse: collapse;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.container p {
+  grid-column: 2;
+  text-align: center;
+  margin: 0;
+}
+
+.container button {
+  grid-column: 3;
+  justify-self: end;
+}

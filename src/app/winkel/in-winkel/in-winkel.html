@@ -1,0 +1,16 @@
+<div class="page">
+  <div class="container">
+    <span></span>
+    <p>{{ pickedProducten() }} / {{ besteldeProducten().length }}</p>
+    <button mat-button (click)="resetOrderedAndPicked()">
+      <mat-icon>published_with_changes</mat-icon>
+    </button>
+  </div>
+  <table>
+    <p>
+      @for (product of besteldeProducten(); track product.id) {
+        <app-in-winkel-item [product]="product" />
+      }
+    </p>
+  </table>
+</div>

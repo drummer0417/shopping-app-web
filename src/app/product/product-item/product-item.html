@@ -1,0 +1,20 @@
+<table class="table-container">
+  <tbody>
+    <tr (click)="onRowClicked()">
+      <td>
+        <strong>
+          {{ product.omschrijving }}
+        </strong>
+        <br />
+        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
+        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'yyyy-MM-dd' }}
+        @if (product.opmerking) {
+          <br />
+          {{ product.opmerking }}
+        }
+      </td>
+      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
+<hr />

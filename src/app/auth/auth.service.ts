@@ -21,6 +21,9 @@ export class AuthService {
         this.router.navigate(['home']);
       })
       .catch((error) => {
+        console.log(email);
+        console.log(pass);
+        
         console.log('in catch error');
         console.log(error);
       })
@@ -29,7 +32,8 @@ export class AuthService {
       });
   }
 
-  logout() {
+  logoff() {
+    this.auth
     return signOut(this.auth);
   }
 }

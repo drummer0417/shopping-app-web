@@ -1,0 +1,18 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { 
+  height: 100%; 
+  /* Voorkomt pull-to-refresh  */
+  overscroll-behavior-y: contain; 
+}
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.page {
+  margin-left: 12px;
+  margin-top: 80px;
+}
+
+

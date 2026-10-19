@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+  <div class="page">
+    <div class="container">
+
+      <mat-form-field>
+        <mat-label>Zoek product...</mat-label>
+        <input matInput type="text" formControlName="searchValue" />
+      </mat-form-field>
+      <button mat-button (click)="addProduct()">
+        <mat-icon>add_circle_outline</mat-icon>
+      </button>
+    </div>
+    <table>
+      <p>
+        @for (product of filteredProducts(); track product.id) {
+          <app-product-item [product]="product" />
+        }
+      </p>
+    </table>
+  </div>
+</form>

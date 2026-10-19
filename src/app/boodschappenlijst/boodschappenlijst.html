@@ -1,0 +1,19 @@
+<form [formGroup]="form">
+  <div class="page">
+    <div>
+      <mat-form-field>
+        <mat-label>Zoek product...</mat-label>
+        <input matInput type="text" formControlName="searchValue" />
+      </mat-form-field>
+
+      <table>
+        <p>
+          @for (product of filteredBoodschappenlijst; track product.id) {
+            <app-boodschappenlijst-item [product]="product" />
+          }
+        </p>
+      </table>
+    </div>
+    <!-- </form> -->
+  </div>
+</form>

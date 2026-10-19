@@ -1,3 +1,74 @@
-<app-toolbar />
-<app-nav />
-<router-outlet />                
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav class="mainnav" mode="over" #mainnav closed>
+    <mat-toolbar class="toolbar">
+      <span>Menu</span>
+    </mat-toolbar>
+    <mat-nav-list class="nav-top" role="list">
+      <mat-list-item>
+        <mat-icon matListItemIcon>home</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/home">Home</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>inventory</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/producten">Producten</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>list_alt</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/boodschappenlijst"
+          >Lijstje maken</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>shopping_cart</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/in-winkel">In de in winkel</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>local_convenience_store</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/winkels">Winkels</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>category</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/categorien">Categoriën</a>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon matListItemIcon>logout</mat-icon>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/logoff">Afmelden</a>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav #setting closed position="end">
+    <mat-toolbar class="toolbar">
+      <span>Instellingen</span>
+    </mat-toolbar>
+
+    <mat-list class="nav-top" class="nav-top" role="list">
+      <mat-list-item class="settings-list-item" role="listitem">
+        <h4 matListItemTitle>Select a theme</h4>
+        <mat-radio-group [(ngModel)]="selectedColor" (change)="themeService.setColor($event.value)">
+          <mat-radio-button value="green">Green</mat-radio-button>
+          <mat-radio-button value="red">Red</mat-radio-button>
+          <mat-radio-button value="blue">Blue</mat-radio-button>
+        </mat-radio-group>
+      </mat-list-item>
+      <mat-list-item class="settings-list-item" role="listitem">
+        <h4 matListItemTitle>Select a mode</h4>
+        <mat-radio-group [(ngModel)]="selectedMode" (change)="themeService.setMode($event.value)">
+          <mat-radio-button value="light">Light Mode</mat-radio-button>
+          <mat-radio-button value="dark">Dark Mode</mat-radio-button>
+        </mat-radio-group>
+      </mat-list-item>
+    </mat-list>
+  </mat-sidenav>
+  <section>
+    <mat-toolbar class="toolbar">
+      <button matMiniFab (click)="mainnav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">{{ breadcrumb }}</span>
+      <span class="spacer"></span>
+      <button matMiniFab (click)="setting.toggle()">
+        <mat-icon>tune</mat-icon>
+      </button>
+    </mat-toolbar>
+  </section>
+  <router-outlet></router-outlet>
+</mat-sidenav-container>

@@ -1,0 +1,17 @@
+table {
+    margin-top: 0;
+    width: 98%;
+    border-collapse: collapse;
+}
+
+td {
+  overflow-wrap: anywhere;
+  word-break: break-word; /* Voor oudere browsers */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Zorgt dat het invoerveld en de knop verticaal mooi uitlijnen */
+  width: 98%;        /* Zorg dat de container de volledige breedte inziet */
+}

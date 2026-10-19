@@ -1,0 +1,81 @@
+<div class="form-wrapper">
+  <div class="dialog_bg">
+    <h4 mat-dialog-title>{{ title }}</h4>
+    <mat-dialog-content  class="dialog-center-content" [formGroup]="form">
+      <mat-form-field class="half-width">
+        <mat-label>Omschrijving</mat-label>
+        <input matInput formControlName="omschrijving" required />
+      </mat-form-field>
+
+      <mat-form-field class="half-width">
+        <mat-label>Merk</mat-label>
+        <input matInput type="text" formControlName="merk" />
+      </mat-form-field>
+
+      <mat-form-field class="half-width">
+        <mat-label>Prijs</mat-label>
+        <input matInput type="number" formControlName="prijs" />
+      </mat-form-field>
+
+      <mat-form-field class="half-width">
+        <mat-label>Eenhied</mat-label>
+        <input matInput type="text" formControlName="eenheid" />
+      </mat-form-field>
+
+      <mat-form-field class="half-width">
+        <mat-label>winkel</mat-label>
+        <mat-select formControlName="winkel" [compareWith]="compareWinkels" required>
+          @for (winkel of winkels; track winkel.id) {
+            <mat-option [value]="winkel">{{ winkel.naam }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Winkel is een verplicht veld </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="half-width">
+        <mat-label>categorie</mat-label>
+        <mat-select formControlName="categorie" [compareWith]="compareCategorien" required>
+          @for (categorie of categorien; track categorie.omschrijving) {
+            <mat-option [value]="categorie">{{ categorie.omschrijving }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Categorie is een verplicht veld </mat-error>
+      </mat-form-field>
+
+      <p>
+        <mat-checkbox formControlName="aanbieding">Aanbieding</mat-checkbox>
+      </p>
+
+      <mat-form-field class="half-width">
+        <mat-label>Opmerking</mat-label>
+        <textarea
+          cdkTextareaAutosize
+          matInput
+          maxLength="200"
+          #opmerking
+          formControlName="opmerking"
+        ></textarea>
+        <mat-hint align="end">{{ opmerking.value.length }} / 200</mat-hint>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="triple-button-container">
+      @if (title?.startsWith('Wijzig')) {
+        <div class="column-left">
+          <button matMiniFab class="btn-left" (click)="onDelete()" matTooltip="Verijderen">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+      <div class="column-center">
+        <button mat-mini-fab class="btn-center" (click)="onCancel()" matTooltip="Annuleren">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+      <div class="column-right"> <button matMiniFab class="btn-right" color="primary" (click)="onSave()" matTooltip="Opslaan"          [disabled]="form.invalid">
+          <mat-icon>save</mat-icon>
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div>

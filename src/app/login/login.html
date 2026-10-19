@@ -1,19 +1,27 @@
-<form [formGroup]="form" (ngSubmit)="onLogin()">
-  <div>
-    <h1>Login</h1>
+<div class="page">
+  <mat-card>
+    <mat-card-title>Login</mat-card-title>
+    <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onLogin()">
+      <p>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="text" id="userid" required="" formControlName="userid" />
+          <mat-error> Email is een verplicht veld </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="example-full-width">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput required="" formControlName="password" autocomplete="on" />
+           <mat-error> Wachtwoord is een verplicht veld! </mat-error>
+        </mat-form-field>
+      </p>
+      <div>
+        <button matButton="outlined" type="submit"  [disabled]="form.invalid">Login</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
 
-    <h2>
-      <div>
-        <label for="userid">userid</label>
-        <input type="text" id="userid" name="userid" formControlName="userid" />
-      </div>
-      <div>
-        <label for="password">Passsword </label>
-        <input type="password" id="password" name="password" formControlName="password" />
-      </div>
-      <div>
-        <button type="submit">Login</button>
-      </div>
-    </h2>
-  </div>
-</form>
+        </div>

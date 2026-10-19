@@ -1,0 +1,64 @@
+.dialog_bg {
+    background-color: white;
+    }
+
+mat-form-field {
+    margin-top: 5px;
+    margin-right: 10px;
+}
+
+.form-wrapper {
+    margin: 10;
+    // margin-top:10px;
+    width: 95%;
+    align-items: center;
+}
+
+.half-width {
+    width: 240px;
+}
+
+.full-width {
+    width: 490px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    column-gap: 16px;
+    row-gap: 100px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.triple-button-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center; /* Zorgt dat ze verticaal mooi uitlijnen */
+}
+
+/* De kolommen verdelen de ruimte, NIET de buttons zelf */
+.triple-button-container > div {
+  flex: 1;
+  display: flex;
+}
+
+.column-left {
+  justify-content: flex-start;
+}
+
+.column-center {
+  justify-content: center;
+}
+
+.column-right {
+  justify-content: flex-end;
+}
+
+td {
+  overflow-wrap: anywhere;
+  word-break: break-word; /* Voor oudere browsers */
+}

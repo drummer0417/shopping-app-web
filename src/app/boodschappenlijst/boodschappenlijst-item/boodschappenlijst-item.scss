@@ -1,0 +1,41 @@
+.picked {
+    color: rgb(32, 32, 37);
+    background: #dae3f0;
+}
+
+.aanbieding {
+  color: red;
+}
+
+table {
+  width: 98%;
+}
+
+.table-container {
+  width: 98%;
+  overflow-x: visible;
+  border-collapse: collapse;
+  -webkit-overflow-scrolling: touch; /* Voor soepel scrollen op iOS */
+}
+
+td {
+  overflow-wrap: anywhere;
+  word-break: break-word; /* Voor oudere browsers */
+}
+
+td:nth-child(1) {
+  width: 50px; 
+  font-size: 30px;
+}
+
+/* De kolom met alle info (tweede) */
+td:nth-child(2) {
+  width: auto;
+}
+
+/* De laatste kolom die nu scheef staat (derde) */
+td:nth-child(3) {
+  width: 60px; 
+  text-align: right; 
+  vertical-align: top;
+}

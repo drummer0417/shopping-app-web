@@ -1,0 +1,21 @@
+<table class="table-container">
+  <tbody>
+    <tr [class.picked]="product.aantalBesteld > 0">
+      <td (click)="onReset()">
+    <strong>{{ product.aantalBesteld }}</strong> 
+      </td>
+      <td (click)="onSelect()">
+        <strong>{{ product.omschrijving }} </strong>
+        <br />
+        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
+        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'yyyy-MM-dd' }}
+        @if (product.opmerking) {
+          <br />
+          {{ product.opmerking }}
+        }
+      </td>
+      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+    </tr>
+  </tbody>
+</table>
+<hr />

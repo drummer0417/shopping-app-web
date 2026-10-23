@@ -36,7 +36,6 @@ export class Producten  implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   allProducts = this.dataService.alleProducten; 
-
   searchValue = signal('');
 
   filteredProducts = computed(() => {

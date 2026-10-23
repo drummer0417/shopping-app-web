@@ -14,22 +14,19 @@ export class AuthService {
   // Observable die de huidige status en UID van de gebruiker bijhoudt
   user$ = user(this.auth);
 
-  login(email: string, pass: string) {
-    return signInWithEmailAndPassword(this.auth, email, pass)
+  login(email: string, password: string) {
+    return signInWithEmailAndPassword(this.auth, email, password)
       .then((result) => {
         this.isLoggedIn.set(true);
         this.router.navigate(['home']);
-      })
-      .catch((error) => {
-        console.log(email);
-        console.log(pass);
-        
-        console.log('in catch error');
-        console.log(error);
-      })
-      .finally(() => {
-        // console.log('Klaar');
       });
+      // .catch((error) => {
+      //   console.log(error);
+        
+      // })
+      // .finally(() => {
+      //   // console.log('Klaar');
+      // });
   }
 
   logoff() {

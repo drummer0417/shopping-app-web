@@ -21,3 +21,8 @@
     opacity: 0.5;
     margin-top: 14px;
   }
+/* Specifiek voor modernere Angular Material versies */
+.error-snackbar {
+  --mdc-snackbar-container-color: #f44336; /* Direct de CSS variabele overschrijven */
+  --mdc-snackbar-supporting-text-color: #ffffff;
+}

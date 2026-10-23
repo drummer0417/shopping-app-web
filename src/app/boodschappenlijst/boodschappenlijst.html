@@ -8,7 +8,7 @@
 
       <table>
         <p>
-          @for (product of filteredBoodschappenlijst; track product.id) {
+          @for (product of filteredBoodschappenlijst(); track product.id) {
             <app-boodschappenlijst-item [product]="product" />
           }
         </p>

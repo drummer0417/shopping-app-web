@@ -4,6 +4,7 @@ import {
   OnInit,
   computed,
   DestroyRef,
+  signal,
 } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { Product } from '../data/model';
@@ -20,40 +21,30 @@ import { MatInputModule } from '@angular/material/input';
 export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
-  boodschappenlijst = computed(() => this.dataService.getProductenSorted());
-  filteredBoodschappenlijst: Product[] = [];
+  alleProducten = this.dataService.alleProducten;
+  // boodschappenlijst = computed(() => this.dataService.alleProducten());
+    searchValue = signal('');
+  filteredBoodschappenlijst = computed(() => {
+    const search = this.searchValue().trim().toUpperCase();
+    const products = this.alleProducten();
+    if (!search) {
+      return products;
+    }
+    return products.filter((product) => 
+      product.omschrijving?.toUpperCase().includes(search) ||
+      product.merk?.toUpperCase().includes(search)
+    );
+  });
+
 
   form = new FormGroup({
     searchValue: new FormControl('', {}),
   });
 
   ngOnInit(): void {
-    this.filteredBoodschappenlijst = this.boodschappenlijst();
-
-    const subscription = this.form.controls.searchValue.valueChanges.subscribe((searchValue) => {
-      console.log('Gebruiker typte:', searchValue);
-      this.filterBoodschappenlijst(searchValue || '');
+    const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {
+      this.searchValue.set(value || '');
     });
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
-
-  private filterBoodschappenlijst(searchValue: string) {
-    searchValue = searchValue.toUpperCase();
-    if (searchValue.length === 0) {
-      this.filteredBoodschappenlijst = this.boodschappenlijst();
-    }
-    let filteredList: Product[] = [];
-    if (searchValue) {
-      this.boodschappenlijst().forEach((product: Product) => {
-        if (searchValue.length <= product.omschrijving.length) {
-          if (product.omschrijving?.toUpperCase().includes(searchValue)
-          || product.merk?.toUpperCase().includes(searchValue)
-          ) {
-            filteredList.push(product);
-          }
-        }
-      });
-      this.filteredBoodschappenlijst = filteredList;
-    }
   }
 }

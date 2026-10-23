@@ -1,4 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.scss */
+@use '@angular/material' as mat;
+
+.error-snackbar {
+  @include mat.snack-bar-overrides((
+    container-color: #f44336,
+    supporting-text-color: #ffffff,
+    button-color: #ffffff
+  ));
+}
 
 html, body { 
   height: 100%; 
@@ -14,5 +23,6 @@ body {
   margin-left: 12px;
   margin-top: 80px;
 }
+
 
 

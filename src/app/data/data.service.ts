@@ -4,10 +4,12 @@ import {
   collectionData,
   Firestore,
   doc,
+  getDocs,
   addDoc,
   deleteDoc,
   updateDoc,
   Timestamp,
+  sortedChanges,
 } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
@@ -40,29 +42,30 @@ export class DataService {
   shopsFetched = signal(false);
   allDataFetched = signal<boolean>(false);
 
-  
   // Een BehaviorSubject houdt de data vast voor de hele app
   private myDataSubject = new BehaviorSubject<any>(null);
   myData$ = this.myDataSubject.asObservable();
 
-     constructor() {
+  constructor() {
     // Luister globaal naar de inlogstatus
-    authState(this.auth).pipe(
-      switchMap(user => {
-        if (user) {
-          // Gebruiker is ingelogd (of hersteld na F5)! Haal nu de data op.
-          return this.initData();
-        } else {
-          // Niet ingelogd, reset de data
-          return of(null);
-        }
-      })
-    ).subscribe(data => {
-      // this.myDataSubject.next(data);
-    });
+    authState(this.auth)
+      .pipe(
+        switchMap((user) => {
+          if (user) {
+            // Gebruiker is ingelogd (of hersteld na F5)! Haal nu de data op.
+            return this.initData();
+          } else {
+            // Niet ingelogd, reset de data
+            return of(null);
+          }
+        }),
+      )
+      .subscribe((data) => {
+        // this.myDataSubject.next(data);
+      });
   }
 
-  initData() {    
+  initData() {
     const productsRef = collection(this.firestore, 'Users');
     collectionData(productsRef, { idField: 'id' }).subscribe((users: any) => {
       this.getQueryUser(users);
@@ -81,22 +84,29 @@ export class DataService {
     });
   }
 
-  fetchProducten(): void {
+  async fetchProducten(): Promise<void> {
     const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
-    // collectionData(articleRef, { idField: 'id' }).subscribe((articles: any) => {
-    (collectionData(articleRef, { idField: 'id' }) as Observable<Article[]>).subscribe(
-      (articles) => {
-        const products: Product[] = [];
-        articles.forEach((article: Article) => {
-          products.push(this.mapArticleToProduct(article));
-        });
-        this.producten.set(products);
-        this.articlesFetched.set(true);
-        this.allDataFetched.set(
-          this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
-        );
-      },
-    );
+
+    try {
+      // getDocs haalt de data eenmalig op
+      const querySnapshot = await getDocs(articleRef);
+
+      const products: Product[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const article = { ...(doc.data() as Article), id: doc.id };
+        products.push(this.mapArticleToProduct(article));
+      });
+      const sortedProducts = this.sortProducts(products);
+
+      this.producten.set(this.sortProducts(products));
+      this.articlesFetched.set(true);
+      this.allDataFetched.set(
+        this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
+      );
+    } catch (error) {
+      console.error('Fout bij ophalen producten:', error);
+    }
   }
 
   fetchCategorien(): void {
@@ -108,9 +118,6 @@ export class DataService {
         categories.forEach((category: Category) => {
           categorien.push(this.mapCategoryToCategorie(category));
         });
-        console.log('categorien');
-        console.log(categorien);
-
         this.categorien.set(categorien);
         this.categoriesFetched.set(true);
         this.allDataFetched.set(
@@ -157,8 +164,8 @@ export class DataService {
     });
   }
 
-  getProductenSorted(): Product[] {
-    return this.producten().sort((a, b) => {
+  sortProducts(producten: Product[]): Product[] {
+    return producten.sort((a, b) => {
       const locA =
         a.categorie && typeof a.categorie.locatie === 'number' ? a.categorie.locatie : null;
       const locB =
@@ -181,13 +188,12 @@ export class DataService {
   }
 
   async updatePickedProduct(id?: string, picked?: boolean) {
-    try {
-      const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
-      await updateDoc(docRef, { picked: picked });
-    } catch (error) {
-      console.error('Error updating document: ', error);
-    }
-    return null;
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
+    await updateDoc(docRef, { picked: picked })
+      .then(() => {
+        // Todo: update signal
+      })
+      .catch((error) => console.error('Error updating document: ', error));
   }
 
   async resetOrderedAndPickedProduct() {
@@ -195,17 +201,17 @@ export class DataService {
       if (product.aantalBesteld > 0 && product.picked === true) {
         try {
           const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + product.id);
-           updateDoc(docRef, { 
+          updateDoc(docRef, {
             picked: false,
-            ordered: 0});
+            ordered: 0,
+          });
         } catch (error) {
           console.error('Error updating document: ', error);
         }
-      }      
+      }
     });
     return null;
   }
-
 
   async addProduct(product: Product) {
     product.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
@@ -216,19 +222,27 @@ export class DataService {
     console.log('article..........');
     console.log(article);
 
-    const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
-    await addDoc(colRef, article)
-      .then((result) => {
-        console.log('result');
-        console.log(result);
-      })
-      .catch((error) => console.log(error));
+    try {
+      const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
+      const docRef = await addDoc(colRef, article);
+      // .then((result) => {    })
+      console.log('docRef');
+      console.log(docRef.id);
+      product.id = docRef.id;
+      if (!this.producten().some((p) => p.id === product.id)) {
+        this.producten.update((values) => {
+          return this.sortProducts([...values, product]);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  async updateArticle(product: Product) {
+  async updateArticle(gewijzigdProduct: Product) {
     try {
-      product.wijzigdatum =  new Timestamp(new Date().getTime() / 1000, 0);
-      const article: Article = this.mapProductToArticle(product);
+      gewijzigdProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
+      const article: Article = this.mapProductToArticle(gewijzigdProduct);
       const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + article.id);
       await updateDoc(docRef, {
         brand: article.brand,
@@ -240,6 +254,12 @@ export class DataService {
         specialOffer: article.specialOffer,
         uom: article.uom,
         opmerking: article.opmerking,
+      });
+      this.producten.update((currentProducten) => {
+        const gewijzigdeProductenLijst = currentProducten.map((product) =>
+          product.id === gewijzigdProduct.id ? gewijzigdProduct : product,
+        );
+        return this.sortProducts(gewijzigdeProductenLijst);
       });
     } catch (error) {
       console.error('Error updating document: ', error);
@@ -262,11 +282,12 @@ export class DataService {
 
   async deleteProcduct(id?: string) {
     // 1. Maak een referentie naar het specifieke document
-     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
 
     try {
       // 2. Verwijder het document
       await deleteDoc(docRef);
+      this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
       console.log('Document succesvol verwijderd!');
     } catch (error) {
       console.error('Fout bij het verwijderen van het document: ', error);

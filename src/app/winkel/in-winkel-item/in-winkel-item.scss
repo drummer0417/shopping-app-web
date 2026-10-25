@@ -7,15 +7,26 @@
   color: red;
 }
 
-table {
-  margin-top:0;
+// table {
+//   margin-top:0;
+//   width: 98%;
+//   border-collapse: collapse;
+// }
+
+.table-container {
   width: 98%;
+  overflow-x: visible;
   border-collapse: collapse;
+  -webkit-overflow-scrolling: touch; /* Voor soepel scrollen op iOS */
+}
+td {
+  overflow-wrap: anywhere;
+  word-break: break-word; /* Voor oudere browsers */
 }
 
 td:nth-child(1) {
   width: 50px; 
-    font-size: 30px;
+  font-size: 30px;
 }
 
 /* De kolom met alle info (tweede) */

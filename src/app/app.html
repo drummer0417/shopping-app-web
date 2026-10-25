@@ -15,11 +15,12 @@
       <mat-list-item>
         <mat-icon matListItemIcon>list_alt</mat-icon>
         <a (click)="mainnav.close()" matListItemTitle routerLink="/boodschappenlijst"
-          >Lijstje maken</a>
+          >Lijstje maken</a
+        >
       </mat-list-item>
       <mat-list-item>
         <mat-icon matListItemIcon>shopping_cart</mat-icon>
-        <a (click)="mainnav.close()" matListItemTitle routerLink="/in-winkel">In de in winkel</a>
+        <a (click)="mainnav.close()" matListItemTitle routerLink="/in-winkel">In de winkel</a>
       </mat-list-item>
       <mat-list-item>
         <mat-icon matListItemIcon>local_convenience_store</mat-icon>
@@ -41,16 +42,33 @@
     </mat-toolbar>
 
     <mat-list class="nav-top" class="nav-top" role="list">
+      <mat-list-item class="setting-list-item" role="listitem">
+        <h4 matListItemTitle>Sorteervolgorde</h4>
+       <div>
+         <mat-form-field>
+           <mat-label>Sorteervolgorde</mat-label>
+           <mat-select (selectionChange)="dataService.setSorteerVolgorde($event.value)">
+             <mat-option value="LOCATIE">Locatie</mat-option>
+             <mat-option value="WINKEL-AZ">Winkel A-Z</mat-option>
+             <mat-option value="WINKEL-ZA">Winkel Z-A</mat-option>
+             <mat-option value="DATUM-NO">Datum: nieuw - oud</mat-option>
+             <mat-option value="DATUM-ON">Datum: oud - nieuw</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-list-item>
+
       <mat-list-item class="settings-list-item" role="listitem">
-        <h4 matListItemTitle>Select a theme</h4>
+        <h4 matListItemTitle>Kies een kleur</h4>
         <mat-radio-group [(ngModel)]="selectedColor" (change)="themeService.setColor($event.value)">
-          <mat-radio-button value="green">Green</mat-radio-button>
-          <mat-radio-button value="red">Red</mat-radio-button>
-          <mat-radio-button value="blue">Blue</mat-radio-button>
+          <mat-radio-button value="green">Groen</mat-radio-button>
+          <mat-radio-button value="red">Rood</mat-radio-button>
+          <mat-radio-button value="blue">Blauw</mat-radio-button>
         </mat-radio-group>
       </mat-list-item>
+
       <mat-list-item class="settings-list-item" role="listitem">
-        <h4 matListItemTitle>Select a mode</h4>
+        <h4 matListItemTitle>Kies mode</h4>
         <mat-radio-group [(ngModel)]="selectedMode" (change)="themeService.setMode($event.value)">
           <mat-radio-button value="light">Light Mode</mat-radio-button>
           <mat-radio-button value="dark">Dark Mode</mat-radio-button>

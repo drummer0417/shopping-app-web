@@ -4,19 +4,47 @@ table {
 //   border-collapse: collapse;
 }
 
-// .container {
-//   display: grid;
-//   grid-template-columns: 1fr auto 1fr;
-//   align-items: center;
-// }
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Zorgt dat het invoerveld en de knop verticaal mooi uitlijnen */
+  width: 98%;        /* Zorg dat de container de volledige breedte inziet */
+}
 
-// .container p {
-//   grid-column: 2;
-//   text-align: center;
-//   margin: 0;
-// }
+/* De container krijgt een relatieve positie */
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* Of een specifieke breedte */
+}
 
-// .container button {
-//   grid-column: 3;
-//   justify-self: end;
-// }
+/* Zorg voor voldoende padding aan de rechterkant van de input, 
+   zodat de tekst niet onder het icoontje typt */
+.input-container input {
+  width: 100%;
+  padding-right: 30px; /* Ruimte voor het icoon */
+  box-sizing: border-box;
+}
+
+/* Het sluit-icoon stylen en positioneren */
+.input-container .close-icon {
+  position: absolute;
+  right: 0px;        /* Aantal pixels van de rechterkant */
+  top: 60%;           /* Centreer verticaal */
+  transform: translateY(-50%);
+  
+  font-size: 20px;    /* Maak het icoon kleiner (pas aan naar wens) */
+  cursor: pointer;
+  color: #999;
+}
+
+.search {
+  width: 95%;
+  // width: 340px;
+}
+
+
+.icon-bg {
+  font-size: 30x;
+  background-color: inherit;
+}

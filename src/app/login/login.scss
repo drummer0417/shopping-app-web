@@ -5,13 +5,14 @@
   }
 
   .mat-form-field {
-    min-width: 300px;
+    min-width: 280px;
     margin-right: 10px;
     margin-left: 10px;
   }
 
   mat-card-title,
   mat-card-content {
+    margin-top: 10px;
     display: flex;
     justify-content: center;
   }

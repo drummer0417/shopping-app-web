@@ -7,7 +7,7 @@
         </strong>
         <br />
         {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
-        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'yyyy-MM-dd' }}
+        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'dd-MM-yyyy' }}
         @if (product.opmerking) {
           <br />
           {{ product.opmerking }}

@@ -24,7 +24,7 @@
 }
 
 .setting-list-item {
-    @include mat.list-overrides((list-item-two-line-container-height: 280px));
+    @include mat.list-overrides((list-item-two-line-container-height: 120px));
 }
 
 .mainnav {

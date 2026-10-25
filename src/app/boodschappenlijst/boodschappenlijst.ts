@@ -7,13 +7,14 @@ import {
   signal,
 } from '@angular/core';
 import { DataService } from '../data/data.service';
-import { Product } from '../data/model';
 import { BoodschappenlijstItem } from './boodschappenlijst-item/boodschappenlijst-item';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  imports: [ReactiveFormsModule, BoodschappenlijstItem, MatInputModule],
+  imports: [ReactiveFormsModule, BoodschappenlijstItem, MatIconModule, MatInputModule, MatCardModule],
   selector: 'app-boodschappen',
   styleUrl: './boodschappenlijst.scss',
   templateUrl: './boodschappenlijst.html',
@@ -47,4 +48,9 @@ export class BoodschappenLijst implements OnInit {
     });
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
+  
+  resetSearchValue() {
+    this.form.controls.searchValue.reset();
+  }
+
 }

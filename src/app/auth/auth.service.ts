@@ -10,8 +10,6 @@ export class AuthService {
   private router = inject(Router);
 
   public isLoggedIn = signal(false);
-
-  // Observable die de huidige status en UID van de gebruiker bijhoudt
   user$ = user(this.auth);
 
   login(email: string, password: string) {
@@ -20,13 +18,6 @@ export class AuthService {
         this.isLoggedIn.set(true);
         this.router.navigate(['home']);
       });
-      // .catch((error) => {
-      //   console.log(error);
-        
-      // })
-      // .finally(() => {
-      //   // console.log('Klaar');
-      // });
   }
 
   logoff() {

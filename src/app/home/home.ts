@@ -16,13 +16,13 @@ export class Home implements OnInit {
   private router = inject(Router);
 
   ngOnInit(): void {
-    if (
-      !this.dataService.alleProducten() ||
-      this.dataService.alleProducten().length === 0
-    ) {
-      this.dataService.initData();
-      // this.router.navigate(['home']);
-    }
-    this.dataService.initData();
+    // if (
+    //   !this.dataService.alleProducten() ||
+    //   this.dataService.alleProducten().length === 0
+    // ) {
+    //   this.dataService.initData();
+    //   // this.router.navigate(['home']);
+    // }
+    // // this.dataService.initData();
   }
 }

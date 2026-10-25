@@ -1,4 +1,4 @@
-import { inject, Injectable, Signal, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import {
   collection,
   collectionData,
@@ -9,17 +9,15 @@ import {
   deleteDoc,
   updateDoc,
   Timestamp,
-  sortedChanges,
 } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
 import { Article, Categorie, Category, Product, Shop, Winkel } from './model';
-import { DocumentData, DocumentReference } from '@angular/fire/compat/firestore';
-import { O } from '@angular/cdk/keycodes';
 import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
-import { MatOptionModule } from '@angular/material/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LogLevel } from '@angular/fire';
 
+const DESC = 1;
+const ASC = -1;
 @Injectable({
   providedIn: 'root',
 })
@@ -29,11 +27,10 @@ export class DataService {
 
   private producten = signal<Product[]>([]);
   private categorien = signal<Categorie[]>([]);
-  // private orderedArticles = signal<Category[]>([]);
   private winkels = signal<Winkel[]>([]);
   private queryUser: string = '';
+  private sorteervolgorde: string = localStorage.getItem('sortsequence') || 'LOCATIE'; // 'LOCATIE';
 
-  //alleProducten = this.producten.asReadonly();
   alleProducten = this.producten.asReadonly();
   alleCategorien = this.categorien.asReadonly();
   alleWinkels = this.winkels.asReadonly();
@@ -42,40 +39,60 @@ export class DataService {
   shopsFetched = signal(false);
   allDataFetched = signal<boolean>(false);
 
-  // Een BehaviorSubject houdt de data vast voor de hele app
-  private myDataSubject = new BehaviorSubject<any>(null);
-  myData$ = this.myDataSubject.asObservable();
-
   constructor() {
-    // Luister globaal naar de inlogstatus
     authState(this.auth)
       .pipe(
         switchMap((user) => {
+          console.log('Gebruiker is ingelogd');
           if (user) {
             // Gebruiker is ingelogd (of hersteld na F5)! Haal nu de data op.
-            return this.initData();
+            return this.initData2();
           } else {
-            // Niet ingelogd, reset de data
+            console.log('Niet ingelogd, reset de data');
             return of(null);
           }
         }),
       )
-      .subscribe((data) => {
-        // this.myDataSubject.next(data);
-      });
+      .subscribe((data) => {});
   }
 
-  initData() {
-    const productsRef = collection(this.firestore, 'Users');
-    collectionData(productsRef, { idField: 'id' }).subscribe((users: any) => {
+  // initData() {
+  //   console.log('in init data');
+
+  //   const productsRef = collection(this.firestore, 'Users');
+  //   collectionData(productsRef, { idField: 'id' }).subscribe((users: any) => {
+  //     this.getQueryUser(users);
+  //   });
+  //   return of(null);
+  // }
+
+  async initData2() {
+    console.log('initData2');
+    const userRef = collection(this.firestore, 'Users');
+    try {
+      // getDocs haalt de users eenmalig op
+      const querySnapshot = await getDocs(userRef);
+      const users: User[] = [];
+
+      querySnapshot.forEach((doc) => {
+
+        const user = { ...(doc.data() as User), id: doc.id };
+        if (user.id === this.auth.currentUser?.uid) {}
+        users.push(user);
+      });
       this.getQueryUser(users);
-    });
-    return of(null);
+    } catch (error) {
+      console.log('geen user');
+      console.log(error);
+    }
+    return null;
   }
 
   getQueryUser(users: User[]) {
     users.forEach((user: User) => {
       if (user.firebaseUID === this.auth.currentUser?.uid) {
+        console.log('Go and fetch the data for: ' + user.email);
+        
         this.queryUser = user.id;
         this.fetchProducten();
         this.fetchCategorien();
@@ -85,10 +102,10 @@ export class DataService {
   }
 
   async fetchProducten(): Promise<void> {
-    const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
-
+    console.log('fetchProducten');
     try {
-      // getDocs haalt de data eenmalig op
+      // getDocs haalt de articles eenmalig op
+      const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
       const querySnapshot = await getDocs(articleRef);
 
       const products: Product[] = [];
@@ -97,15 +114,16 @@ export class DataService {
         const article = { ...(doc.data() as Article), id: doc.id };
         products.push(this.mapArticleToProduct(article));
       });
-      const sortedProducts = this.sortProducts(products);
 
       this.producten.set(this.sortProducts(products));
       this.articlesFetched.set(true);
       this.allDataFetched.set(
         this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
       );
+      console.log('aantal producten: ' + this.producten().length);
     } catch (error) {
       console.error('Fout bij ophalen producten:', error);
+    } finally {
     }
   }
 
@@ -164,47 +182,49 @@ export class DataService {
     });
   }
 
-  sortProducts(producten: Product[]): Product[] {
-    return producten.sort((a, b) => {
-      const locA =
-        a.categorie && typeof a.categorie.locatie === 'number' ? a.categorie.locatie : null;
-      const locB =
-        b.categorie && typeof b.categorie.locatie === 'number' ? b.categorie.locatie : null;
-
-      if (locA !== locB) {
-        if (locA === null) return 1; // a heeft geen locatie/categorie, dus b komt eerst
-        if (locB === null) return -1; // b heeft geen locatie/categorie, dus a komt eerst
-        return locA - locB; // Numerieke sortering (laag naar hoog)
-      }
-
-      const descA = (a.omschrijving || '').toUpperCase();
-      const descB = (b.omschrijving || '').toUpperCase();
-
-      if (descA < descB) return -1;
-      if (descA > descB) return 1;
-
-      return 0; // Alles is gelijk
-    });
+  setSorteerVolgorde(
+    sorteervolgorde: 'LOCATIE' | 'DATUM-ON' | 'DATUM-NO' | 'WINKEL-AZ' | 'WINKEL-ZA',
+  ) {
+    this.sorteervolgorde = sorteervolgorde;
+    localStorage.setItem('sortsequence', sorteervolgorde);
+    const sorted = this.sortProducts(this.producten());
+    this.producten.update((values) => sorted);
   }
 
-  async updatePickedProduct(id?: string, picked?: boolean) {
-    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
-    await updateDoc(docRef, { picked: picked })
-      .then(() => {
-        // Todo: update signal
-      })
-      .catch((error) => console.error('Error updating document: ', error));
+  async updatePickedProduct(pickedProduct: Product) {
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + pickedProduct.id);
+    try {
+      await updateDoc(docRef, { picked: pickedProduct.picked }).then(() => {});
+      this.producten.update((currentProducten) =>
+        currentProducten.map((currentProduct) =>
+          currentProduct.id == pickedProduct.id ? pickedProduct : currentProduct,
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async resetOrderedAndPickedProduct() {
-    this.getBesteldeProducten().forEach((product: Product) => {
-      if (product.aantalBesteld > 0 && product.picked === true) {
+    var gewijzigdeProducten: Product[] = [];
+    this.getBesteldeProducten().forEach((newProduct: Product) => {
+      if (newProduct.aantalBesteld > 0 && newProduct.picked === true) {
         try {
-          const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + product.id);
+          const docRef = doc(
+            this.firestore,
+            'Users/' + this.queryUser + '/Articles/' + newProduct.id,
+          );
           updateDoc(docRef, {
             picked: false,
             ordered: 0,
           });
+          newProduct.picked = false;
+          newProduct.aantalBesteld = 0;
+          this.producten.update((currentProducten) =>
+            currentProducten.map((currentProduct) =>
+              newProduct.id === currentProduct.id ? newProduct : currentProduct,
+            ),
+          );
         } catch (error) {
           console.error('Error updating document: ', error);
         }
@@ -213,11 +233,11 @@ export class DataService {
     return null;
   }
 
-  async addProduct(product: Product) {
-    product.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
-    product.aantalBesteld = 0;
-    product.picked = false;
-    const article: Article = this.mapProductToArticle(product);
+  async addProduct(pickedProduct: Product) {
+    pickedProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
+    pickedProduct.aantalBesteld = 0;
+    pickedProduct.picked = false;
+    const article: Article = this.mapProductToArticle(pickedProduct);
     delete article.id;
     console.log('article..........');
     console.log(article);
@@ -228,10 +248,10 @@ export class DataService {
       // .then((result) => {    })
       console.log('docRef');
       console.log(docRef.id);
-      product.id = docRef.id;
-      if (!this.producten().some((p) => p.id === product.id)) {
+      pickedProduct.id = docRef.id;
+      if (!this.producten().some((p) => p.id === pickedProduct.id)) {
         this.producten.update((values) => {
-          return this.sortProducts([...values, product]);
+          return this.sortProducts([...values, pickedProduct]);
         });
       }
     } catch (error) {
@@ -267,9 +287,12 @@ export class DataService {
     return null;
   }
 
-  async updateOrderdProduct(id?: string, ordered?: number) {
+  async updateOrderdProduct(gewijzigdProduct: Product, ordered?: number) {
     try {
-      const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
+      const docRef = doc(
+        this.firestore,
+        'Users/' + this.queryUser + '/Articles/' + gewijzigdProduct.id,
+      );
       await updateDoc(docRef, {
         ordered: ordered,
         picked: false,
@@ -281,11 +304,9 @@ export class DataService {
   }
 
   async deleteProcduct(id?: string) {
-    // 1. Maak een referentie naar het specifieke document
     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
 
     try {
-      // 2. Verwijder het document
       await deleteDoc(docRef);
       this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
       console.log('Document succesvol verwijderd!');
@@ -366,5 +387,92 @@ export class DataService {
       return value;
     }
     return value[0].toUpperCase() + value.slice(1);
+  }
+
+  private sortProducts(products: Product[]): Product[] {
+    console.log('sortsequence: ' + this.sorteervolgorde);
+
+    switch (this.sorteervolgorde) {
+      case 'LOCATIE': {
+        const sorted = this.sortByLocatie(products);
+        return sorted;
+      }
+      case 'DATUM-ON': {
+        return this.sortByDate(products, ASC);
+      }
+      case 'DATUM-NO': {
+        return this.sortByDate(products, DESC);
+      }
+      case 'WINKEL-AZ': {
+        console.log('winkel');
+        return this.sortByWinkel(products, ASC);
+      }
+      case 'WINKEL-ZA': {
+        console.log('winkel');
+        return this.sortByWinkel(products, DESC);
+      }
+      default: {
+        console.log('ignore');
+        return [];
+      }
+    }
+  }
+
+  private sortByLocatie(producten: Product[]): Product[] {
+    const sorted = producten.sort((a, b) => {
+      const locA =
+        a.categorie && typeof a.categorie.locatie === 'number' ? a.categorie.locatie : null;
+      const locB =
+        b.categorie && typeof b.categorie.locatie === 'number' ? b.categorie.locatie : null;
+
+      if (locA !== locB) {
+        if (locA === null) return 1; // a heeft geen locatie/categorie, dus b komt eerst
+        if (locB === null) return -1; // b heeft geen locatie/categorie, dus a komt eerst
+        return locA - locB; // Numerieke sortering (laag naar hoog)
+      }
+
+      const descA = (a.omschrijving || '').toUpperCase();
+      const descB = (b.omschrijving || '').toUpperCase();
+
+      if (descA < descB) return -1;
+      if (descA > descB) return 1;
+
+      return 0;
+    });
+    return sorted;
+  }
+
+  private sortByDate(producten: Product[], order: 1 | -1): Product[] {
+    const sorted = producten.sort((a, b) => {
+      if (a.wijzigdatum === null) return 1 * order;
+      if (b.wijzigdatum === null) return -1 * order;
+
+      if (a.wijzigdatum.toMillis() !== b.wijzigdatum.toMillis()) {
+        if (a.wijzigdatum < b.wijzigdatum) return 1 * order;
+        if (a.wijzigdatum > b.wijzigdatum) return -1 * order;
+      }
+      if (a.omschrijving < b.omschrijving) return 1;
+      if (a.omschrijving > b.omschrijving) return -1;
+
+      return 0;
+    });
+    return sorted;
+  }
+
+  private sortByWinkel(producten: Product[], order: 1 | -1): Product[] {
+    const sorted = producten.sort((a, b) => {
+      if (a.winkel?.naam === null) return 1 * order;
+      if (b.winkel?.naam === null) return -1 * order;
+
+      if (a.winkel.naam !== b.winkel.naam) {
+        if (a.winkel.naam < b.winkel.naam) return 1 * order;
+        if (a.winkel.naam > b.winkel.naam) return -1 * order;
+      }
+      if (a.omschrijving < b.omschrijving) return -1;
+      if (a.omschrijving > b.omschrijving) return 1;
+
+      return 0;
+    });
+    return sorted;
   }
 }

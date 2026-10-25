@@ -59,6 +59,8 @@ export class EditProductDialog {
       aanbieding: [this.data.product.aanbieding],
       categorie: [this.data.product.categorie],
       opmerking: [this.data.product.opmerking],
+      aantalBesteld: [this.data.product.aantalBesteld],
+      picked: [this.data.product.picked],
     });
   }
 

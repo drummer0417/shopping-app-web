@@ -16,9 +16,10 @@ export const authGuard: CanActivateFn = (route, state) => {
     take(1),
     map((user) => {
       if (user) {
-        // router.navigate(['/home']);
-        return true; // Gebruiker is ingelogd (ook na refresh!)
+        return true;
       } else {
+        console.log('niet in gelogd, ga naar loging');
+        
         // Niet ingelogd, stuur door naar loginpagina
         router.navigate(['/login']);
         return false;

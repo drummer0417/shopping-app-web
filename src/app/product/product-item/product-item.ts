@@ -21,10 +21,6 @@ export class ProductItem {
   private readonly dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  constructor() {
-    effect(() => console.log('value changed'));
-  }
-
   onRowClicked() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -37,7 +33,8 @@ export class ProductItem {
 
     dialogRef.afterClosed().subscribe((result: { action: string; product: Product }) => {
       if (result.action === 'save') {
-        console.log('id: ' + result.product.id);
+        console.log( this.product);
+        console.log( result.product);
         this.dataService.updateArticle(result.product);
         this.snackBar.open('Product gewijzigd', '', { duration: 5000 });
       } else if (result.action === 'delete') {

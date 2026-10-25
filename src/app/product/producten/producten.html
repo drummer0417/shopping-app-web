@@ -1,14 +1,20 @@
 <form [formGroup]="form">
   <div class="page">
     <div class="container">
-
-      <mat-form-field>
+      <mat-form-field class="search">
         <mat-label>Zoek product...</mat-label>
-        <input matInput type="text" formControlName="searchValue" />
+        <div class="input-container">
+          <input matInput type="text" formControlName="searchValue" /> 
+          @if (searchValue()) {
+            <!-- <button matSuffix matIconButton aria-label="Clear" (click)="resetSearchValue()"> -->
+              <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
+            <!-- </button> -->
+          }
+        </div>
       </mat-form-field>
-      <button mat-button (click)="addProduct()">
-        <mat-icon>add_circle_outline</mat-icon>
-      </button>
+      <!-- <button mat-button (click)="addProduct()"> -->
+        <mat-icon class="icon-bg" (click)="addProduct()">add_circle_outline</mat-icon>
+      <!-- </button> -->
     </div>
     <table>
       <p>

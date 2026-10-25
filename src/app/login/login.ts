@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -23,6 +24,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class Login {
   authService = inject(AuthService);
   snackBar = inject(MatSnackBar);
+  router = inject(Router);
 
   form = new FormGroup({
     userid: new FormControl('', { validators: [Validators.required] }),
@@ -33,6 +35,9 @@ export class Login {
     if (this.form.controls.userid.value && this.form.controls.password.value) {
       this.authService
         .login(this.form.controls.userid.value, this.form.controls.password.value)
+        .then (() => {
+          this.router.navigate(['/home']);
+        })
         .catch((error) => {
           console.log(error);
           this.snackBar.open('Er is een fout opgetreden. Controleer je email en wachtwoord', 'Sluiten', {

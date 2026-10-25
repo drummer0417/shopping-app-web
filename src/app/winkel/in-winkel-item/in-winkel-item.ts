@@ -19,8 +19,8 @@ export class InWinkeltItem {
     console.log(this.product.id);
     if (this.product.id !==  null) {
       console.log(this.product);
-      
-      this.dataService.updatePickedProduct(this.product.id, !this.product.picked);
+      this.product.picked = !this.product.picked;
+      this.dataService.updatePickedProduct(this.product);
     }
   }
 }

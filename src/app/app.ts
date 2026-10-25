@@ -10,7 +10,6 @@ import { AuthService } from './auth/auth.service';
 import { getAuth } from '@angular/fire/auth';
 import {
   Router,
-  provideRouter,
   RouterOutlet,
   RouterLink,
   ActivatedRoute,
@@ -21,11 +20,15 @@ import { Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
 import { LoaderService } from './services/loader.service';
 import { ThemeService } from './services/theme.service';
-import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { DataService } from './data/data.service';
+import { MatLabel, MatSelect } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-root',
@@ -35,29 +38,33 @@ import { MatButtonModule } from '@angular/material/button';
     RouterOutlet,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatLabel,
     MatListModule,
+    MatOptionModule,
     MatRadioModule,
     MatSidenavModule,
     MatSidenavModule,
     RouterLink,
     MatToolbarModule,
-    // Toolbar
+    MatSelect
 ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  breadcrumb = 'Home'; // default fallback`
+  breadcrumb = 'Home';
   selectedColor: 'green' | 'red' | 'blue' = 'green'; // default
   selectedMode: 'light' | 'dark' = 'light';
+  dataService = inject(DataService);
+  themeService = inject(ThemeService);
+  loaderService = inject(LoaderService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+  title = inject(Title);
+  sorteervolgorde  = 'LOCATIE'
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private title: Title,
-    public themeService: ThemeService,
-    public loaderService: LoaderService,
-  ) {
+  constructor() {
     this.router.events
     .pipe(filter((event) => event instanceof NavigationEnd))
     .subscribe(() => {

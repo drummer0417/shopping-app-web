@@ -54,13 +54,17 @@ export class Producten  implements OnInit {
     searchValue: new FormControl('', {}),
   });
 
-  product = {};
+  product = { prijs: 0};
 
   ngOnInit(): void {
     const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {
       this.searchValue.set(value || '');
     });
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  resetSearchValue() {
+    this.form.controls.searchValue.reset();
   }
 
   addProduct(): void {

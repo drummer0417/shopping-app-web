@@ -28,9 +28,9 @@ export class InWinkel {
   });
 
   ngOnInit(): void {
-    if (!this.dataService.alleProducten() || this.dataService.alleProducten().length === 0) {
-      this.dataService.initData();
-    }
+    // if (!this.dataService.alleProducten() || this.dataService.alleProducten().length === 0) {
+    //   this.dataService.initData();
+    // }
   }
 
   resetOrderedAndPicked() {

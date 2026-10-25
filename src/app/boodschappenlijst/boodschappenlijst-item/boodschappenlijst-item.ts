@@ -16,11 +16,12 @@ export class BoodschappenlijstItem {
 
   onReset() {
     console.log('onReset clicked');
-    this.dataService.updateOrderdProduct(this.product.id, this.product.aantalBesteld =0);
+    this.dataService.updateOrderdProduct(this.product, this.product.aantalBesteld = 0);
   }
 
   onSelect() {
     console.log('onSelect clicked');
-    this.dataService.updateOrderdProduct(this.product.id, ++this.product.aantalBesteld);
+    this.dataService.updateOrderdProduct(this.product, ++this.product.aantalBesteld);
   }
+  
 }

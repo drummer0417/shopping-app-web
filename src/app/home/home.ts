@@ -11,7 +11,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   styleUrl: './home.scss',
   templateUrl: './home.html',
 })
-export class Home implements OnInit {
+export class Home {
   dataService = inject(DataService);
   private router = inject(Router);
 

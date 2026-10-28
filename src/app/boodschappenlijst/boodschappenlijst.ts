@@ -23,8 +23,8 @@ export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
   alleProducten = this.dataService.alleProducten;
-  // boodschappenlijst = computed(() => this.dataService.alleProducten());
-    searchValue = signal('');
+  searchValue = signal('');
+ 
   filteredBoodschappenlijst = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
     const products = this.alleProducten();

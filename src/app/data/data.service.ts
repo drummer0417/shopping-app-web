@@ -13,8 +13,7 @@ import {
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
 import { Article, Categorie, Category, Product, Shop, Winkel } from './model';
-import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
-import { LogLevel } from '@angular/fire';
+import { Observable, of, switchMap } from 'rxjs';
 
 const DESC = 1;
 const ASC = -1;
@@ -46,41 +45,28 @@ export class DataService {
           console.log('Gebruiker is ingelogd');
           if (user) {
             // Gebruiker is ingelogd (of hersteld na F5)! Haal nu de data op.
-            return this.initData2();
+            return this.initData();
           } else {
             console.log('Niet ingelogd, reset de data');
             return of(null);
-          }
-        }),
+          }})
       )
-      .subscribe((data) => {});
+      .subscribe();
   }
 
-  // initData() {
-  //   console.log('in init data');
-
-  //   const productsRef = collection(this.firestore, 'Users');
-  //   collectionData(productsRef, { idField: 'id' }).subscribe((users: any) => {
-  //     this.getQueryUser(users);
-  //   });
-  //   return of(null);
-  // }
-
-  async initData2() {
-    console.log('initData2');
-    const userRef = collection(this.firestore, 'Users');
+  async initData() {
     try {
-      // getDocs haalt de users eenmalig op
+      const userRef = collection(this.firestore, 'Users');
       const querySnapshot = await getDocs(userRef);
-      const users: User[] = [];
-
       querySnapshot.forEach((doc) => {
-
         const user = { ...(doc.data() as User), id: doc.id };
-        if (user.id === this.auth.currentUser?.uid) {}
-        users.push(user);
+        if (user.firebaseUID === this.auth.currentUser?.uid) {
+          this.queryUser = user.id;
+          this.fetchProducten();
+          this.fetchCategorien();
+          this.fetchWinkels();
+        }
       });
-      this.getQueryUser(users);
     } catch (error) {
       console.log('geen user');
       console.log(error);
@@ -88,33 +74,17 @@ export class DataService {
     return null;
   }
 
-  getQueryUser(users: User[]) {
-    users.forEach((user: User) => {
-      if (user.firebaseUID === this.auth.currentUser?.uid) {
-        console.log('Go and fetch the data for: ' + user.email);
-        
-        this.queryUser = user.id;
-        this.fetchProducten();
-        this.fetchCategorien();
-        this.fetchWinkels();
-      }
-    });
-  }
-
   async fetchProducten(): Promise<void> {
     console.log('fetchProducten');
     try {
-      // getDocs haalt de articles eenmalig op
       const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
       const querySnapshot = await getDocs(articleRef);
-
       const products: Product[] = [];
 
       querySnapshot.forEach((doc) => {
         const article = { ...(doc.data() as Article), id: doc.id };
         products.push(this.mapArticleToProduct(article));
       });
-
       this.producten.set(this.sortProducts(products));
       this.articlesFetched.set(true);
       this.allDataFetched.set(
@@ -129,7 +99,6 @@ export class DataService {
 
   fetchCategorien(): void {
     const categoryRef = collection(this.firestore, 'Users', this.queryUser, 'Categories');
-    // collectionData(categoryRef, { idField: 'id' }).subscribe((categories: any) => {
     (collectionData(categoryRef, { idField: 'id' }) as Observable<Category[]>).subscribe(
       (categories) => {
         const categorien: Categorie[] = [];
@@ -202,7 +171,7 @@ export class DataService {
       );
     } catch (error) {
       console.log(error);
-    }
+    } 
   }
 
   async resetOrderedAndPickedProduct() {
@@ -238,10 +207,8 @@ export class DataService {
     pickedProduct.aantalBesteld = 0;
     pickedProduct.picked = false;
     const article: Article = this.mapProductToArticle(pickedProduct);
-    delete article.id;
-    console.log('article..........');
-    console.log(article);
 
+    delete article.id;
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
       const docRef = await addDoc(colRef, article);
@@ -251,6 +218,7 @@ export class DataService {
       pickedProduct.id = docRef.id;
       if (!this.producten().some((p) => p.id === pickedProduct.id)) {
         this.producten.update((values) => {
+          return this.sortProducts([...values, pickedProduct]);
           return this.sortProducts([...values, pickedProduct]);
         });
       }
@@ -390,8 +358,6 @@ export class DataService {
   }
 
   private sortProducts(products: Product[]): Product[] {
-    console.log('sortsequence: ' + this.sorteervolgorde);
-
     switch (this.sorteervolgorde) {
       case 'LOCATIE': {
         const sorted = this.sortByLocatie(products);
@@ -404,16 +370,14 @@ export class DataService {
         return this.sortByDate(products, DESC);
       }
       case 'WINKEL-AZ': {
-        console.log('winkel');
         return this.sortByWinkel(products, ASC);
       }
       case 'WINKEL-ZA': {
-        console.log('winkel');
         return this.sortByWinkel(products, DESC);
       }
       default: {
         console.log('ignore');
-        return [];
+        return products;
       }
     }
   }

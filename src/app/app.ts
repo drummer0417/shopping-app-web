@@ -70,12 +70,14 @@ export class App {
     .subscribe(() => {
       const child = this.getChild(this.route);
       child.data.subscribe((data) => {
-        this.breadcrumb = data['breadcrumb'] || 'Winkelwagen  ';
+        this.breadcrumb = data['breadcrumb'] || '...';
         this.title.setTitle(this.breadcrumb);
       });
     });
     this.selectedColor = this.themeService.color();
     this.selectedMode = this.themeService.mode();
+
+    this.router.navigate(['/home']);
   }
 
   getChild(route: ActivatedRoute): ActivatedRoute {

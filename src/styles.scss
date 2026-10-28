@@ -1,12 +1,10 @@
 /* src/styles.scss */
 @use '@angular/material' as mat;
+@use 'theme-colors' as theme;
 
-.error-snackbar {
-  @include mat.snack-bar-overrides((
-    container-color: #f44336,
-    supporting-text-color: #ffffff,
-    button-color: #ffffff
-  ));
+html {
+  color-scheme: dark;
+  	@include mat.theme((color: theme.$primary-palette))
 }
 
 html, body { 
@@ -24,5 +22,12 @@ body {
   margin-top: 80px;
 }
 
+.error-snackbar {
+  @include mat.snack-bar-overrides((
+    container-color: #f44336,
+    supporting-text-color: #ffffff,
+    button-color: #ffffff
+  ));
+}
 
 

@@ -34,21 +34,24 @@ td {
 /* Het sluit-icoon stylen en positioneren */
 .input-container .close-icon {
   position: absolute;
-  right: 0px;        /* Aantal pixels van de rechterkant */
-  top: 60%;           /* Centreer verticaal */
-  transform: translateY(-50%);
-  
-  font-size: 20px;    /* Maak het icoon kleiner (pas aan naar wens) */
+  right: 0px;
+  top: 60%; 
+  transform: translateY(-70%);
+  font-size: 30px;
   cursor: pointer;
   color: #999;
 }
 
 .search {
-  width: 340px;
+  width: 92%;
+  // width: 340px;
 }
 
-
-.icon-bg {
-  font-size: 30x;
+.add-icon {
   background-color: inherit;
+  padding-right: 10px;;
+  transform: translateY(-20%);
+  font-size: 27px; 
+  cursor: pointer;
 }
+

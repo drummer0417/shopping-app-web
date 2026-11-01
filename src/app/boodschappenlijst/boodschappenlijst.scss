@@ -1,4 +1,3 @@
-
 table {
   width: 98%;
 //   border-collapse: collapse;
@@ -31,9 +30,8 @@ table {
   position: absolute;
   right: 0px;        /* Aantal pixels van de rechterkant */
   top: 60%;           /* Centreer verticaal */
-  transform: translateY(-50%);
-  
-  font-size: 20px;    /* Maak het icoon kleiner (pas aan naar wens) */
+  transform: translateY(-70%);
+  font-size: 30px;    /* Maak het icoon kleiner (pas aan naar wens) */
   cursor: pointer;
   color: #999;
 }

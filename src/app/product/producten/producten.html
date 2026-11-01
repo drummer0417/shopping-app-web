@@ -6,16 +6,13 @@
         <div class="input-container">
           <input matInput type="text" formControlName="searchValue" /> 
           @if (searchValue()) {
-            <!-- <button matSuffix matIconButton aria-label="Clear" (click)="resetSearchValue()"> -->
               <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
-            <!-- </button> -->
           }
         </div>
       </mat-form-field>
-      <!-- <button mat-button (click)="addProduct()"> -->
-        <mat-icon class="icon-bg" (click)="addProduct()">add_circle_outline</mat-icon>
-      <!-- </button> -->
+        <mat-icon class="add-icon" (click)="addProduct()">add_circle_outline</mat-icon>
     </div>
+    <hr>
     <table>
       <p>
         @for (product of filteredProducts(); track product.id) {

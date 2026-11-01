@@ -6,9 +6,7 @@
         <div class="input-container">
           <input matInput type="text" formControlName="searchValue" />
           @if (searchValue()) {
-            <!-- <button matSuffix matIconButton aria-label="Clear" (click)="resetSearchValue()"> -->
             <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
-            <!-- </button> -->
           }
         </div>
       </mat-form-field>

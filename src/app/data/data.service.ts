@@ -14,7 +14,7 @@ import {
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
 import { Article, Categorie, Category, OrderedArticle, Product, Shop, Winkel } from './model';
-import { Observable, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, filter } from 'rxjs';
 
 const DESC = 1;
 const ASC = -1;
@@ -185,8 +185,8 @@ export class DataService {
   }
 
   updateOrderedArticle(product: Product) {
-    if (product.aantalBesteld === 0) {
-      this.deleteOrderedArticle(product);
+    if (product.id && product.aantalBesteld === 0) {
+      this.deleteOrderedArticle(product.id);
     } else {
       this.updateNumberOfOrderedProducts(product);
     }
@@ -221,16 +221,11 @@ export class DataService {
       });
   }
 
-  async deleteOrderedArticle(product: Product) {
-    const docRef = doc(
-      this.firestore,
-      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
-    );
+  async deleteOrderedArticle(id: string) {
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + id);
 
     try {
       await deleteDoc(docRef);
-      // this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
-      console.log('OrederedArticle succesvol verwijderd!');
     } catch (error) {
       console.error('Fout bij het verwijderen van OrederedArticle: ', error);
     }
@@ -279,32 +274,12 @@ export class DataService {
     // .filter((product): product is Product => !!product);
   }
 
-  async resetOrderedAndPickedProduct() {
-    var gewijzigdeProducten: Product[] = [];
-    // this.getBesteldeProducten2().forEach((newProduct: Product) => {
-    //   if (newProduct.aantalBesteld > 0 && newProduct.picked === true) {
-    //     try {
-    //       const docRef = doc(
-    //         this.firestore,
-    //         'Users/' + this.queryUser + '/Articles/' + newProduct.id,
-    //       );
-    //       updateDoc(docRef, {
-    //         picked: false,
-    //         ordered: 0,
-    //       });
-    //       newProduct.picked = false;
-    //       newProduct.aantalBesteld = 0;
-    //       this.producten.update((currentProducten) =>
-    //         currentProducten.map((currentProduct) =>
-    //           newProduct.id === currentProduct.id ? newProduct : currentProduct,
-    //         ),
-    //       );
-    //     } catch (error) {
-    //       console.error('Error updating document: ', error);
-    //     }
-    //   }
-    // });
-    return null;
+  async resetOrderedAndPickedProduct() {  
+    this.orderedArticles().forEach((orderedArticel: OrderedArticle) => {
+      if (orderedArticel.picked && orderedArticel.id) {
+        this.deleteOrderedArticle(orderedArticel.id)
+      }
+    })
   }
 
   async addProduct(selectedProduct: Product) {
@@ -357,22 +332,6 @@ export class DataService {
     }
     return null;
   }
-
-  // async updateOrderdProduct(gewijzigdProduct: Product, ordered?: number) {
-  //   try {
-  //     const docRef = doc(
-  //       this.firestore,
-  //       'Users/' + this.queryUser + '/Articles/' + gewijzigdProduct.id,
-  //     );
-  //     await updateDoc(docRef, {
-  //       ordered: ordered,
-  //       picked: false,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error updating document: ', error);
-  //   }
-  //   return null;
-  // }
 
   async deleteProcduct(id?: string) {
     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);

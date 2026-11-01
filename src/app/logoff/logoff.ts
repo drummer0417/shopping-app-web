@@ -14,6 +14,7 @@ export class Logoff implements OnInit {
   authService = inject(AuthService);
   
   ngOnInit(): void {
+    if (this.authService.isLoggedIn())
     this.authService.logoff();
   }
 

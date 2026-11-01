@@ -4,7 +4,7 @@
 }
 
 .aanbieding {
-  color: rgb(137, 195, 226);
+  color: red;
 }
 
 table {
@@ -28,12 +28,10 @@ td:nth-child(1) {
   font-size: 30px;
 }
 
-/* De kolom met alle info (tweede) */
 td:nth-child(2) {
   width: auto;
 }
 
-/* De laatste kolom die nu scheef staat (derde) */
 td:nth-child(3) {
   width: 60px; 
   text-align: right; 

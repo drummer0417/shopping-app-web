@@ -3,7 +3,7 @@
 @use 'theme-colors' as theme;
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
   	@include mat.theme((color: theme.$primary-palette))
 }
 

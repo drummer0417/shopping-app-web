@@ -9,10 +9,11 @@ import {
   deleteDoc,
   updateDoc,
   Timestamp,
+  setDoc,
 } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
-import { Article, Categorie, Category, Product, Shop, Winkel } from './model';
+import { Article, Categorie, Category, OrderedArticle, Product, Shop, Winkel } from './model';
 import { Observable, of, switchMap } from 'rxjs';
 
 const DESC = 1;
@@ -27,6 +28,8 @@ export class DataService {
   private producten = signal<Product[]>([]);
   private categorien = signal<Categorie[]>([]);
   private winkels = signal<Winkel[]>([]);
+  private orderedArticles = signal<OrderedArticle[]>([]);
+
   private queryUser: string = '';
   private sorteervolgorde: string = localStorage.getItem('sortsequence') || 'LOCATIE'; // 'LOCATIE';
 
@@ -36,6 +39,7 @@ export class DataService {
   articlesFetched = signal(false);
   categoriesFetched = signal(false);
   shopsFetched = signal(false);
+  orderedArticlesFetched = signal(false);
   allDataFetched = signal<boolean>(false);
 
   constructor() {
@@ -49,7 +53,8 @@ export class DataService {
           } else {
             console.log('Niet ingelogd, reset de data');
             return of(null);
-          }})
+          }
+        }),
       )
       .subscribe();
   }
@@ -65,6 +70,7 @@ export class DataService {
           this.fetchProducten();
           this.fetchCategorien();
           this.fetchWinkels();
+          this.fetchOrderedArticles();
         }
       });
     } catch (error) {
@@ -75,7 +81,6 @@ export class DataService {
   }
 
   async fetchProducten(): Promise<void> {
-    console.log('fetchProducten');
     try {
       const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
       const querySnapshot = await getDocs(articleRef);
@@ -88,12 +93,14 @@ export class DataService {
       this.producten.set(this.sortProducts(products));
       this.articlesFetched.set(true);
       this.allDataFetched.set(
-        this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
+        this.alleCategorien() &&
+          this.categoriesFetched() &&
+          this.shopsFetched() &&
+          this.categoriesFetched(),
       );
       console.log('aantal producten: ' + this.producten().length);
     } catch (error) {
       console.error('Fout bij ophalen producten:', error);
-    } finally {
     }
   }
 
@@ -108,7 +115,10 @@ export class DataService {
         this.categorien.set(categorien);
         this.categoriesFetched.set(true);
         this.allDataFetched.set(
-          this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
+          this.alleCategorien() &&
+            this.categoriesFetched() &&
+            this.shopsFetched() &&
+            this.categoriesFetched(),
         );
       },
     );
@@ -126,13 +136,27 @@ export class DataService {
       this.winkels.set(winkels);
       this.shopsFetched.set(true);
       this.allDataFetched.set(
-        this.alleCategorien() && this.categoriesFetched() && this.shopsFetched(),
+        this.alleCategorien() &&
+          this.categoriesFetched() &&
+          this.shopsFetched() &&
+          this.categoriesFetched(),
       );
     });
   }
 
-  getBesteldeProducten(): Product[] {
-    return this.alleProducten().filter((product: Product) => product.aantalBesteld > 0);
+  fetchOrderedArticles(): void {
+    // const userId = queryUser ? queryUser : 'unknown'
+    const shopRef = collection(this.firestore, 'Users', this.queryUser, 'OrderedArticles');
+    collectionData(shopRef, { idField: 'id' }).subscribe((orderedArticles: any) => {
+      this.orderedArticles.set(orderedArticles);
+      this.orderedArticlesFetched.set(true);
+      this.allDataFetched.set(
+        this.alleCategorien() &&
+          this.categoriesFetched() &&
+          this.shopsFetched() &&
+          this.categoriesFetched(),
+      );
+    });
   }
 
   getCategorienSorted(): Categorie[] {
@@ -160,66 +184,145 @@ export class DataService {
     this.producten.update((values) => sorted);
   }
 
-  async updatePickedProduct(pickedProduct: Product) {
-    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + pickedProduct.id);
+  updateOrderedArticle(product: Product) {
+    if (product.aantalBesteld === 0) {
+      this.deleteOrderedArticle(product);
+    } else {
+      this.updateNumberOfOrderedProducts(product);
+    }
+  }
+
+  async updateNumberOfOrderedProducts(orderedProduct: Product) {
+    // const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + orderedProduct.id );
+
+    const docRef = collection(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/');
+    const result = setDoc(doc(docRef, orderedProduct.id), {
+      numberOrdered: orderedProduct.aantalBesteld,
+      picked: orderedProduct.picked,
+    });
+  }
+
+  async updatePickedOrderedArticle(product: Product) {
+    const docRef = doc(
+      this.firestore,
+      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
+    );
+
+    await updateDoc(docRef, { picked: product.picked })
+      .then((result) => {
+        // this.producten.update((currentProducten) =>
+        //   currentProducten.map((currentProduct) =>
+        //     currentProduct.id == orderedProduct.id ? orderedProduct : currentProduct,
+        //   ),
+        // );
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async deleteOrderedArticle(product: Product) {
+    const docRef = doc(
+      this.firestore,
+      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
+    );
+
     try {
-      await updateDoc(docRef, { picked: pickedProduct.picked }).then(() => {});
-      this.producten.update((currentProducten) =>
-        currentProducten.map((currentProduct) =>
-          currentProduct.id == pickedProduct.id ? pickedProduct : currentProduct,
-        ),
-      );
+      await deleteDoc(docRef);
+      // this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
+      console.log('OrederedArticle succesvol verwijderd!');
     } catch (error) {
-      console.log(error);
-    } 
+      console.error('Fout bij het verwijderen van OrederedArticle: ', error);
+    }
+  }
+
+  getBesteldeProducten(): Product[] {
+    const all: Product[] = this.alleProducten();
+    const ordered: OrderedArticle[] = this.orderedArticles();
+
+    const articleMap = new Map(all.map((article) => [article.id, article]));
+
+    const besteldeProducten = ordered.map((ordered) => {
+        const product = articleMap.get(ordered.id);
+        if (!product) return null;
+        return {
+          ...product,
+          aantalBesteld: ordered.numberOrdered,
+          picked: ordered.picked,
+        };
+      })
+      .filter((product): product is Product => !!product);
+      // sort
+      return this.sortProducts(besteldeProducten);
+  }
+
+  getAllProductsWithNumberOrdered() {
+    const all: Product[] = this.alleProducten();
+    const ordered: OrderedArticle[] = this.orderedArticles();
+
+    const orderedMap = new Map(
+      ordered.map((orderedArticle) => [orderedArticle.id, orderedArticle]),
+    );
+
+    return all.map((all) => {
+      const orderedArticle = orderedMap.get(all.id);
+      if (!orderedArticle) {
+        all.aantalBesteld = 0;
+        return all;
+      }
+      return {
+        ...all,
+        aantalBesteld: orderedArticle.numberOrdered,
+        picked: orderedArticle.picked,
+      };
+    });
+    // .filter((product): product is Product => !!product);
   }
 
   async resetOrderedAndPickedProduct() {
     var gewijzigdeProducten: Product[] = [];
-    this.getBesteldeProducten().forEach((newProduct: Product) => {
-      if (newProduct.aantalBesteld > 0 && newProduct.picked === true) {
-        try {
-          const docRef = doc(
-            this.firestore,
-            'Users/' + this.queryUser + '/Articles/' + newProduct.id,
-          );
-          updateDoc(docRef, {
-            picked: false,
-            ordered: 0,
-          });
-          newProduct.picked = false;
-          newProduct.aantalBesteld = 0;
-          this.producten.update((currentProducten) =>
-            currentProducten.map((currentProduct) =>
-              newProduct.id === currentProduct.id ? newProduct : currentProduct,
-            ),
-          );
-        } catch (error) {
-          console.error('Error updating document: ', error);
-        }
-      }
-    });
+    // this.getBesteldeProducten2().forEach((newProduct: Product) => {
+    //   if (newProduct.aantalBesteld > 0 && newProduct.picked === true) {
+    //     try {
+    //       const docRef = doc(
+    //         this.firestore,
+    //         'Users/' + this.queryUser + '/Articles/' + newProduct.id,
+    //       );
+    //       updateDoc(docRef, {
+    //         picked: false,
+    //         ordered: 0,
+    //       });
+    //       newProduct.picked = false;
+    //       newProduct.aantalBesteld = 0;
+    //       this.producten.update((currentProducten) =>
+    //         currentProducten.map((currentProduct) =>
+    //           newProduct.id === currentProduct.id ? newProduct : currentProduct,
+    //         ),
+    //       );
+    //     } catch (error) {
+    //       console.error('Error updating document: ', error);
+    //     }
+    //   }
+    // });
     return null;
   }
 
-  async addProduct(pickedProduct: Product) {
-    pickedProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
-    pickedProduct.aantalBesteld = 0;
-    pickedProduct.picked = false;
-    const article: Article = this.mapProductToArticle(pickedProduct);
-
+  async addProduct(selectedProduct: Product) {
+    selectedProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
+    selectedProduct.aantalBesteld = 0;
+    selectedProduct.picked = false;
+    const article: Article = this.mapProductToArticle(selectedProduct);
     delete article.id;
+
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
       const docRef = await addDoc(colRef, article);
       // .then((result) => {    })
-      console.log('docRef');
-      console.log(docRef.id);
-      pickedProduct.id = docRef.id;
-      if (!this.producten().some((p) => p.id === pickedProduct.id)) {
+      selectedProduct.id = docRef.id;
+      if (!this.producten().some((p) => p.id === selectedProduct.id)) {
         this.producten.update((values) => {
-          return this.sortProducts([...values, pickedProduct]);
-          return this.sortProducts([...values, pickedProduct]);
+          return this.sortProducts([...values, selectedProduct]);
+          return this.sortProducts([...values, selectedProduct]);
         });
       }
     } catch (error) {
@@ -255,21 +358,21 @@ export class DataService {
     return null;
   }
 
-  async updateOrderdProduct(gewijzigdProduct: Product, ordered?: number) {
-    try {
-      const docRef = doc(
-        this.firestore,
-        'Users/' + this.queryUser + '/Articles/' + gewijzigdProduct.id,
-      );
-      await updateDoc(docRef, {
-        ordered: ordered,
-        picked: false,
-      });
-    } catch (error) {
-      console.error('Error updating document: ', error);
-    }
-    return null;
-  }
+  // async updateOrderdProduct(gewijzigdProduct: Product, ordered?: number) {
+  //   try {
+  //     const docRef = doc(
+  //       this.firestore,
+  //       'Users/' + this.queryUser + '/Articles/' + gewijzigdProduct.id,
+  //     );
+  //     await updateDoc(docRef, {
+  //       ordered: ordered,
+  //       picked: false,
+  //     });
+  //   } catch (error) {
+  //     console.error('Error updating document: ', error);
+  //   }
+  //   return null;
+  // }
 
   async deleteProcduct(id?: string) {
     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
@@ -277,7 +380,6 @@ export class DataService {
     try {
       await deleteDoc(docRef);
       this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
-      console.log('Document succesvol verwijderd!');
     } catch (error) {
       console.error('Fout bij het verwijderen van het document: ', error);
     }

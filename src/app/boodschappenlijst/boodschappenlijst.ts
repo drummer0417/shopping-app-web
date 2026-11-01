@@ -12,6 +12,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { Product } from '../data/model';
 
 @Component({
   imports: [ReactiveFormsModule, BoodschappenlijstItem, MatIconModule, MatInputModule, MatCardModule],
@@ -22,12 +23,12 @@ import { MatIconModule } from '@angular/material/icon';
 export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
-  alleProducten = this.dataService.alleProducten;
+  alleProducten: Product[] = this.dataService.getAllProductsWithNumberOrdered();
   searchValue = signal('');
  
   filteredBoodschappenlijst = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
-    const products = this.alleProducten();
+    const products = this.alleProducten;
     if (!search) {
       return products;
     }

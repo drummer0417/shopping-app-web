@@ -10,16 +10,12 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const auth = inject(Auth);
 
-  console.log('currentUser: ' + auth.currentUser);
-
   return authState(auth).pipe(
     take(1),
     map((user) => {
       if (user) {
         return true;
       } else {
-        console.log('niet in gelogd, ga naar loging');
-        // Niet ingelogd, stuur door naar loginpagina
         router.navigate(['/login']);
         return false;
       }

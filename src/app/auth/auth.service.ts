@@ -21,7 +21,8 @@ export class AuthService {
   }
 
   logoff() {
-    this.auth
+    // this.auth
+    this.isLoggedIn.set(false);
     return signOut(this.auth);
   }
 }

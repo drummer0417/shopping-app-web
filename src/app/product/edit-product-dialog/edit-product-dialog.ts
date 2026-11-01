@@ -65,17 +65,14 @@ export class EditProductDialog {
   }
 
   onSave() {
-    console.log('dialog.onSave()');
     this.dialogRef.close({ action: 'save', product: this.form.value });
   }
   
   onDelete() {
-    console.log('dialog.onDelete');
     this.dialogRef.close({ action: 'delete', product: this.form.value });
   }
 
   onCancel() {
-    console.log('dialog.onCancdel()');
     this.dialogRef.close({ action: 'cancel' });
   }
 

@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DataService } from '../../data/data.service';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { InWinkeltItem } from '../in-winkel-item/in-winkel-item';
@@ -16,7 +16,7 @@ import { filter } from 'rxjs';
 })
 export class InWinkel {
   dataService = inject(DataService);
-  besteldeProducten = computed(() => this.dataService.getBesteldeProducten());
+  besteldeProducten = signal<Product[]>([]);
   pickedProducten = computed(() => {
     var number = 0;
     this.besteldeProducten().forEach((procuct: Product) => {
@@ -27,10 +27,19 @@ export class InWinkel {
     return number;
   });
 
+  constructor () {
+    effect(() => {
+      this.besteldeProducten.set(this.dataService.getBesteldeProducten());
+    });
+  }
+
   ngOnInit(): void {
     // if (!this.dataService.alleProducten() || this.dataService.alleProducten().length === 0) {
     //   this.dataService.initData();
     // }
+    // console.log('this.dataService.getBesteldeProducten2()...');
+    // console.log(this.dataService.getBesteldeProducten());
+    
   }
 
   resetOrderedAndPicked() {

@@ -47,13 +47,18 @@ export interface Shop {
   dateModified: Timestamp;
   name: string;
 }
-
-
 export interface Winkel {
   id?: string;
   wijzigdatum: Timestamp;
   naam: string;
 }
+
+export interface OrderedArticle {
+  id?: string;
+  numberOrdered: number;
+  picked: boolean;
+}
+
 export interface ShoppingListItem {
    description: string;
    

@@ -33,12 +33,9 @@ export class ProductItem {
 
     dialogRef.afterClosed().subscribe((result: { action: string; product: Product }) => {
       if (result.action === 'save') {
-        console.log( this.product);
-        console.log( result.product);
         this.dataService.updateArticle(result.product);
         this.snackBar.open('Product gewijzigd', '', { duration: 5000 });
       } else if (result.action === 'delete') {
-        console.log('result');
         this.dataService.deleteProcduct(result.product.id);
         this.snackBar.open(result.product.omschrijving + ' verwijderd', '', { duration: 5000 });
       }

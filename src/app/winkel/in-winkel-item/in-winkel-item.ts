@@ -15,12 +15,11 @@ export class InWinkeltItem {
   @Input() product!: Product;
   private dataService = inject(DataService);
 
-  onClick() {
+  onSwapPicked() {
     console.log(this.product.id);
     if (this.product.id !==  null) {
-      console.log(this.product);
       this.product.picked = !this.product.picked;
-      this.dataService.updatePickedProduct(this.product);
+      this.dataService.updatePickedOrderedArticle(this.product);
     }
   }
 }

@@ -1,10 +1,10 @@
 <table class="table-container">
   <tbody>
     <tr [class.picked]="product.aantalBesteld > 0">
-      <td (click)="onReset()">
+      <td (click)="onResetProduct()">
     <strong>{{ product.aantalBesteld }}</strong> 
       </td>
-      <td (click)="onSelect()">
+      <td (click)="onAddProduct()">
         <strong>{{ product.omschrijving }} </strong>
         <br />
         {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},

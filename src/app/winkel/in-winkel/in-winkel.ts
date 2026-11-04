@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { filter } from 'rxjs';
 
 @Component({
-  imports: [InWinkeltItem, MatIconModule, MatAnchor],
+  imports: [InWinkeltItem, MatIconModule],
   selector: 'app-in-winkel',
   styleUrl: './in-winkel.scss',
   templateUrl: './in-winkel.html',
@@ -29,7 +29,7 @@ export class InWinkel {
 
   constructor () {
     effect(() => {
-      this.besteldeProducten.set(this.dataService.getBesteldeProducten());
+      this.besteldeProducten.set(this.dataService.getOrderedArticles());
     });
   }
 

@@ -59,7 +59,7 @@ export class DataService {
       .subscribe();
   }
 
-  async initData() {
+  private async initData() {
     try {
       const userRef = collection(this.firestore, 'Users');
       const querySnapshot = await getDocs(userRef);
@@ -80,7 +80,7 @@ export class DataService {
     return null;
   }
 
-  async fetchProducten(): Promise<void> {
+  private async fetchProducten(): Promise<void> {
     try {
       const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
       const querySnapshot = await getDocs(articleRef);
@@ -98,8 +98,8 @@ export class DataService {
           this.shopsFetched() &&
           this.categoriesFetched(),
       );
-      this.producten().forEach(product => {
-        if (!product.categorie.id) { 
+      this.producten().forEach((product) => {
+        if (!product.categorie.id) {
           console.log(product);
         }
       });
@@ -109,7 +109,7 @@ export class DataService {
     }
   }
 
-  fetchCategorien(): void {
+  private fetchCategorien(): void {
     const categoryRef = collection(this.firestore, 'Users', this.queryUser, 'Categories');
     (collectionData(categoryRef, { idField: 'id' }) as Observable<Category[]>).subscribe(
       (categories) => {
@@ -129,7 +129,7 @@ export class DataService {
     );
   }
 
-  fetchWinkels(): void {
+  private fetchWinkels(): void {
     // const userId = queryUser ? queryUser : 'unknown'
     const shopRef = collection(this.firestore, 'Users', this.queryUser, 'Shops');
     // collectionData(shopRef, { idField: 'id' }).subscribe((shops: any) => {
@@ -149,7 +149,7 @@ export class DataService {
     });
   }
 
-  fetchOrderedArticles(): void {
+  private fetchOrderedArticles(): void {
     // const userId = queryUser ? queryUser : 'unknown'
     const shopRef = collection(this.firestore, 'Users', this.queryUser, 'OrderedArticles');
     collectionData(shopRef, { idField: 'id' }).subscribe((orderedArticles: any) => {
@@ -197,25 +197,25 @@ export class DataService {
     }
   }
 
-  async updateNumberOfOrderedProducts(orderedProduct: Product) {
+  private async updateNumberOfOrderedProducts(orderedProduct: Product) {
     // const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + orderedProduct.id );
 
     const docRef = collection(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/');
     const result = setDoc(doc(docRef, orderedProduct.id), {
       numberOrdered: orderedProduct.aantalBesteld,
       picked: orderedProduct.picked,
-    })
-    .catch((error)  => { 
-      console.log(error)
-    })
+    }).catch((error) => {
+      console.log(error);
+    });
   }
 
   async updatePickedOrderedArticle(product: Product) {
-    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + product.id);
+    const docRef = doc(
+      this.firestore,
+      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
+    );
     await updateDoc(docRef, { picked: product.picked })
-      .then((result) => {
-
-      })
+      .then((result) => {})
       .catch((error) => {
         console.log(error);
       });
@@ -230,13 +230,14 @@ export class DataService {
     }
   }
 
-  getBesteldeProducten(): Product[] {
+  getOrderedArticles(): Product[] {
     const all: Product[] = this.alleProducten();
     const ordered: OrderedArticle[] = this.orderedArticles();
 
     const articleMap = new Map(all.map((article) => [article.id, article]));
 
-    const besteldeProducten = ordered.map((ordered) => {
+    const besteldeProducten = ordered
+      .map((ordered) => {
         const product = articleMap.get(ordered.id);
         if (!product) return null;
         return {
@@ -246,8 +247,8 @@ export class DataService {
         };
       })
       .filter((product): product is Product => !!product);
-      // sort
-      return this.sortProducts(besteldeProducten);
+    // sort
+    return this.sortProducts(besteldeProducten);
   }
 
   getAllProductsWithNumberOrdered() {
@@ -273,12 +274,12 @@ export class DataService {
     // .filter((product): product is Product => !!product);
   }
 
-  async resetOrderedAndPickedProduct() {  
+  async resetOrderedAndPickedProduct() {
     this.orderedArticles().forEach((orderedArticel: OrderedArticle) => {
       if (orderedArticel.picked && orderedArticel.id) {
-        this.deleteOrderedArticle(orderedArticel.id)
+        this.deleteOrderedArticle(orderedArticel.id);
       }
-    })
+    });
   }
 
   async addProduct(selectedProduct: Product) {
@@ -296,7 +297,7 @@ export class DataService {
       if (!this.producten().some((p) => p.id === selectedProduct.id)) {
         this.producten.update((values) => {
           return this.sortProducts([...values, selectedProduct]);
-          return this.sortProducts([...values, selectedProduct]);
+          // return this.sortProducts([...values, selectedProduct]);
         });
       }
     } catch (error) {

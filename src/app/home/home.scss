@@ -12,3 +12,19 @@
     background-color: var(--mat-sys-tertiary-fixed);
     opacity: 0.6;
 }
+
+[matListItemTitle] {
+    font-weight: bold !important;
+}
+
+[matListItemLine] {
+    white-space: normal !important;
+    line-height: 1.3;
+}
+
+/* Omdat mat-list-item een vaste hoogte kan hebben, moet je deze vaak flexibel maken */
+mat-list-item {
+    height: auto !important;
+    min-height: 48px;
+    padding: 0 20px  0 10px;
+}

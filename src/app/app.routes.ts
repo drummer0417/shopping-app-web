@@ -8,6 +8,7 @@ import { Login } from './login/login';
 import { Logoff } from './logoff/logoff';
 import { PageNotFound } from './page-not-found/page-not-found';
 import { Producten } from './product/producten/producten';
+import { Download } from './download/download';
 
 
 export const routes: Routes = [
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'boodschappenlijst', component: BoodschappenLijst, canActivate: [authGuard], data: { breadcrumb: 'Lijstje maken' }},
   { path: 'producten', component: Producten, canActivate: [authGuard], data: { breadcrumb: 'Producten' } },
   { path: 'in-winkel', component: InWinkel, canActivate: [authGuard], data: { breadcrumb: 'In de winkel' }},
+  { path: 'download', component: Download, canActivate: [authGuard], data: { breadcrumb: 'Download' }},
   { path: '**', component: PageNotFound, data: { breadcrumb: '404' } } ,
 ];
 

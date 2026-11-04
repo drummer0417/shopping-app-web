@@ -1,16 +1,64 @@
 <div class="page">
   <div>
     @if (!dataService.allDataFetched()) {
-    <div class="spinner-overlay">
-      <mat-spinner />
-    </div>
-  } @else {
-    <p>Kies uit een van de vele mogelijkheden wah guh wilt gaan doen JONGUHHHH!</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-      <br><br> laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id es
-      tation ullamco laboris nisi ut aliquip ex ea commodo consequat. <br>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id es<br>
+      <div class="spinner-overlay">
+        <mat-spinner />
+      </div>
+    } @else {
+      <h4>Welkom bj de winkel</h4>
 
-  }
-</div>
+      <p>Wat kun je hier doen?</p>
 
+      <mat-list>
+        <mat-list-item>
+          <span matListItemTitle>Producten</span>
+          <span matListItemLine
+            >Geeft een overzicht van alle producten in de database. Door een product te selecteren
+            kun je deze wijzigen of verwijderen. Door op '+' te clicken kun je een product
+            toevoegen.<br />
+            Door een waarde in het zoekveld in te vullen kun je producten zoeken op omschrijving en
+            merk.
+          </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>Lijstje maken</span>
+          <span matListItemLine
+            >Kies uit het overzicht welke producten je wil gaan kopen. Elke keer dat je op een
+            product clickt wordt het aantal met een verhoogd. Om het aantal op nul te zetten click
+            je op het aantal. Zoeken gebeurt in omschrijving en merk.
+          </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>In de winkel</span>
+          <span matListItemLine
+            >Deze optie gebruik je in de winkel. Als je een product in je karretje doet click je
+            erop en wordt ie gemarkeerd als "die heb ik". Door rechtsboven op het reset knopje te
+            clicken worden alle producten die al in je karretje liggen uit het lijstje verwijderd.
+          </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>Winkels</span>
+          <span matListItemLine>Under constructon. </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>Categorieën</span>
+          <span matListItemLine>Under constructon. </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>Downloads</span>
+          <span matListItemLine
+            >Maak een download van de inhoud van de database. Je kunt kiezen uit: producten,
+            winkels, Categorieën en producten op het lijstje.
+          </span>
+        </mat-list-item>
+        <mat-list-item>
+          <span matListItemTitle>Afmelden</span>
+          <span matListItemLine
+            >Je wordt uitgelogd en kan terug naar het loginscherm. Je kan natuurlijk ook andere
+            leuke dingen gaan doen.</span
+          >
+        </mat-list-item>
+      </mat-list>
+    }
+  </div>
 </div>

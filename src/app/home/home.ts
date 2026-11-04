@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
-  imports: [MatSidenavModule, MatSidenavModule, MatProgressSpinnerModule, MatProgressBarModule],
+  imports: [MatListModule, MatSidenavModule, MatSidenavModule, MatProgressSpinnerModule, MatProgressBarModule],
   selector: 'app-home',
   styleUrl: './home.scss',
   templateUrl: './home.html',

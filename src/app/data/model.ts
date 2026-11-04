@@ -32,11 +32,13 @@ export interface Product {
 }
 
 export interface Category {
+  id?: string;
   dateModified: Timestamp;
   description: string;
   location: number;
 }
 export interface Categorie {
+  id?: string;
   wijzigdatum: Timestamp;
   omschrijving: string;
   locatie: number;

@@ -98,6 +98,11 @@ export class DataService {
           this.shopsFetched() &&
           this.categoriesFetched(),
       );
+      this.producten().forEach(product => {
+        if (!product.categorie.id) { 
+          console.log(product);
+        }
+      });
       console.log('aantal producten: ' + this.producten().length);
     } catch (error) {
       console.error('Fout bij ophalen producten:', error);
@@ -199,22 +204,17 @@ export class DataService {
     const result = setDoc(doc(docRef, orderedProduct.id), {
       numberOrdered: orderedProduct.aantalBesteld,
       picked: orderedProduct.picked,
-    });
+    })
+    .catch((error)  => { 
+      console.log(error)
+    })
   }
 
   async updatePickedOrderedArticle(product: Product) {
-    const docRef = doc(
-      this.firestore,
-      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
-    );
-
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + product.id);
     await updateDoc(docRef, { picked: product.picked })
       .then((result) => {
-        // this.producten.update((currentProducten) =>
-        //   currentProducten.map((currentProduct) =>
-        //     currentProduct.id == orderedProduct.id ? orderedProduct : currentProduct,
-        //   ),
-        // );
+
       })
       .catch((error) => {
         console.log(error);
@@ -223,7 +223,6 @@ export class DataService {
 
   async deleteOrderedArticle(id: string) {
     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + id);
-
     try {
       await deleteDoc(docRef);
     } catch (error) {
@@ -396,8 +395,8 @@ export class DataService {
 
   private mapCategoryToCategorie(category: Category): Categorie {
     return {
+      id: category.id,
       wijzigdatum: category.dateModified, // new Timestamp(new Date().getTime() / 1000, 0),
-      // wijzigdatum: category.dateModified || new Timestamp(new Date().getTime() / 1000, 0),
       omschrijving: category.description,
       locatie: category.location,
     };
@@ -405,6 +404,7 @@ export class DataService {
 
   private mapCategorieToCategory(categorie: Categorie): Category {
     return {
+      id: categorie.id,
       dateModified: categorie.wijzigdatum,
       description: categorie.omschrijving,
       location: categorie.locatie,

@@ -2,11 +2,21 @@ table {
     margin-top: 0;
     width: 98%;
     border-collapse: collapse;
+    overflow:hidden;
+
 }
 
 td {
   overflow-wrap: anywhere;
   word-break: break-word; /* Voor oudere browsers */
+}
+
+hr {
+  width: 98%;
+  margin-top: -10px;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
 }
 
 .container {

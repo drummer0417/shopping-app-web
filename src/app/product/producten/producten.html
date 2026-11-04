@@ -4,15 +4,14 @@
       <mat-form-field class="search">
         <mat-label>Zoek product...</mat-label>
         <div class="input-container">
-          <input matInput type="text" formControlName="searchValue" /> 
+          <input matInput type="text" formControlName="searchValue" />
           @if (searchValue()) {
-              <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
+            <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
           }
         </div>
       </mat-form-field>
-        <mat-icon class="add-icon" (click)="addProduct()">add_circle_outline</mat-icon>
+      <mat-icon class="add-icon" (click)="addProduct()">add_circle_outline</mat-icon>
     </div>
-    <hr>
     <table>
       <p>
         @for (product of filteredProducts(); track product.id) {
@@ -20,5 +19,6 @@
         }
       </p>
     </table>
+    <hr />
   </div>
 </form>

@@ -1,12 +1,10 @@
 <div class="page">
   <div class="container">
-    <span></span>
     <p>{{ pickedProducten() }} / {{ besteldeProducten().length }}</p>
-    <button mat-button (click)="resetOrderedAndPicked()">
-      <mat-icon>published_with_changes</mat-icon>
-    </button>
+    <!-- <button mat-button > -->
+      <mat-icon class="reset-icon" (click)="resetOrderedAndPicked()">published_with_changes</mat-icon>
+    <!-- </button> -->
   </div>
-  <hr>
   <table>
     <p>
       @for (product of besteldeProducten(); track product.id) {
@@ -14,4 +12,5 @@
       }
     </p>
   </table>
+  <hr>
 </div>

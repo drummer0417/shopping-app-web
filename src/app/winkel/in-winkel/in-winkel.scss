@@ -1,6 +1,14 @@
 table {
   width: 98%;
-//   border-collapse: collapse;
+  border-collapse: collapse;
+}
+
+hr {
+  width: 98%;
+  margin-top: -10px;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
 }
 
 .container {
@@ -15,7 +23,12 @@ table {
   margin: 0;
 }
 
-.container button {
-  grid-column: 3;;
+.reset-icon {
+  grid-column: 3;
   justify-self: end;
+  background-color: inherit;
+  padding-right: 15px;;
+  transform: translateY(-20%);
+  font-size: 27px; 
+  cursor: pointer;
 }

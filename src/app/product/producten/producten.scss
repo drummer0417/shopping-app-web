@@ -1,66 +1,83 @@
-table {
-    margin-top: 0;
-    width: 98%;
-    border-collapse: collapse;
-    overflow:hidden;
+body {
+  height: 100%;
 }
 
-td {
-  overflow-wrap: anywhere;
-  word-break: break-word; /* Voor oudere browsers */
-}
-
-hr {
-  width: 98%;
-  margin-top: -10px;
-  margin-right: 0px;
-  margin-left: 0px;
-  margin-bottom: 0px;
-}
-
-.container {
+.page-layout {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+header {
+  align-content: center;
+  text-align: center;
+  margin-top: 70px;
+  margin-left: 0px;
+  margin-right: 16px;
+  margin-bottom: 10px;
+  height: 56px;
+  // background: #f88;
   justify-content: space-between;
-  align-items: center; /* Zorgt dat het invoerveld en de knop verticaal mooi uitlijnen */
-  width: 98%;        /* Zorg dat de container de volledige breedte inziet */
 }
 
-/* De container krijgt een relatieve positie */
+main {
+  flex: 1;
+  /* takes the remaining height of the "container" div */
+  overflow: auto;
+  //   background: lightgreen;
+}
+
 .input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%; /* Of een specifieke breedte */
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .search {
+    flex-grow: 1; // Zorgt ervoor dat het zoekveld alle beschikbare ruimte links inneemt
+    width: 100%;
+  }
+
+  .close-icon {
+    position: absolute;
+    right: 0px; // Plaatst het icoon tegen de rechterkant van het invoerveld
+    top: 35%;
+    cursor: pointer;
+    z-index: 2; // Zorgt dat het icoon klikbaar blijft boven de input
+
+    font-size: 24px;
+    width: 28px;
+    height: 28px;
+
+    // Zorgt dat het icoon perfect gecentreerd blijft binnen de knop
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .add-icon {
+    margin-left: 12px;
+    font-size: 32px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+  }
 }
 
-/* Zorg voor voldoende padding aan de rechterkant van de input, 
-   zodat de tekst niet onder het icoontje typt */
 .input-container input {
   width: 100%;
-  padding-right: 30px; /* Ruimte voor het icoon */
+  padding-right: 30px;
+  /* Ruimte voor het icoon */
   box-sizing: border-box;
 }
 
-/* Het sluit-icoon stylen en positioneren */
-.input-container .close-icon {
-  position: absolute;
-  right: 0px;
-  top: 60%; 
-  transform: translateY(-70%);
-  font-size: 30px;
-  cursor: pointer;
-  color: #999;
-}
-
-.search {
+.items {
+  // padding-left: 26px;
   width: 92%;
-  // width: 340px;
 }
 
-.add-icon {
-  background-color: inherit;
-  padding-right: 10px;;
-  transform: translateY(-20%);
-  font-size: 27px; 
-  cursor: pointer;
+hr {
+  margin-top: 0px;
+  margin-bottom: 2px;
 }
-

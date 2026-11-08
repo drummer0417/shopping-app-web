@@ -1,23 +1,30 @@
-<form [formGroup]="form">
-  <div class="page">
-    <div>
-      <mat-form-field class="search" >
-        <mat-label>Zoek product...</mat-label>
+<body>
+  <div class="page-layout">
+    <header>
+      <form [formGroup]="form">
         <div class="input-container">
-          <input matInput type="text" formControlName="searchValue" />
-          @if (searchValue()) {
-            <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
-          }
+          <mat-form-field class="search">
+            <mat-label>Zoek product...</mat-label>
+            <div class="input-container">
+              <input matInput type="text" formControlName="searchValue" />
+              @if (searchValue()) {
+                <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
+              }
+            </div>
+          </mat-form-field>
         </div>
-      </mat-form-field>
-      <table>
+      </form>
+    </header>
+    <main>
+      <div class="items">
         <p>
           @for (product of filteredBoodschappenlijst(); track product.id) {
             <app-boodschappenlijst-item [product]="product" />
           }
         </p>
-      </table>
-    </div>
-    <!-- </form> -->
+      </div>
+    </main>
+    <!-- <footer>hallo</footer> -->
   </div>
-</form>
+  <!-- </form> -->
+</body>

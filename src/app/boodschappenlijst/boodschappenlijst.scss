@@ -1,47 +1,73 @@
-table {
-  width: 98%;
-  border-collapse: collapse;
+body {
+  height: 100%;
 }
 
-.container {
+.page-layout {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+header {
+  align-content: center;
+  text-align: center;
+  margin: 70px 16px 10px 0px;
+  height: 56px;
+  // background: #f88;
   justify-content: space-between;
-  align-items: center; /* Zorgt dat het invoerveld en de knop verticaal mooi uitlijnen */
-  width: 98%;        /* Zorg dat de container de volledige breedte inziet */
 }
 
-/* De container krijgt een relatieve positie */
+// footer {
+//   align-content: center;
+//   text-align: center;
+//   margin: 5px 16px 0px 16px;
+//   height: 20px;
+//   background: #f88;
+// }
+
+main {
+  flex: 1;
+  /* takes the remaining height of the "container" div */
+  overflow: auto;
+  //   background: lightgreen;
+}
+
 .input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%; /* Of een specifieke breedte */
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .search {
+    flex-grow: 1; // Zorgt ervoor dat het zoekveld alle beschikbare ruimte links inneemt
+    width: 100%;
+  }
+
+  .close-icon {
+    position: absolute;
+    right: 0px; // Plaatst het icoon tegen de rechterkant van het invoerveld
+    top: 35%;
+    cursor: pointer;
+    z-index: 2; // Zorgt dat het icoon klikbaar blijft boven de input
+    font-size: 24px;
+    width: 28px;
+    height: 28px;
+    // Zorgt dat het icoon perfect gecentreerd blijft binnen de knop
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-/* Zorg voor voldoende padding aan de rechterkant van de input, 
-   zodat de tekst niet onder het icoontje typt */
 .input-container input {
   width: 100%;
-  padding-right: 30px; /* Ruimte voor het icoon */
+  padding-right: 30px;
+  /* Ruimte voor het icoon */
   box-sizing: border-box;
 }
 
-/* Het sluit-icoon stylen en positioneren */
-.input-container .close-icon {
-  position: absolute;
-  right: 0px;        /* Aantal pixels van de rechterkant */
-  top: 60%;           /* Centreer verticaal */
-  transform: translateY(-70%);
-  font-size: 30px;    /* Maak het icoon kleiner (pas aan naar wens) */
-  cursor: pointer;
-  color: #999;
-}
-
-.search {
-  width: 95%;
-  // width: 340px;
-}
-
-.icon-bg {
-  font-size: 30x;
-  background-color: inherit;
+.items {
+  // padding-left: 26px;
+  width: 100%;
 }

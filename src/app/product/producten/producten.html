@@ -1,24 +1,29 @@
-<form [formGroup]="form">
-  <div class="page">
-    <div class="container">
-      <mat-form-field class="search">
-        <mat-label>Zoek product...</mat-label>
+<body>
+  <!-- <div class="page"> -->
+  <div class="page-layout">
+    <header>
+      <form [formGroup]="form">
         <div class="input-container">
-          <input matInput type="text" formControlName="searchValue" />
-          @if (searchValue()) {
-            <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
-          }
+          <mat-form-field class="search">
+            <mat-label>Zoek product...</mat-label>
+            <input matInput type="text" formControlName="searchValue" />
+            @if (searchValue()) {
+              <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
+            }
+          </mat-form-field>
+          <mat-icon class="add-icon" (click)="addProduct()">add_circle_outline</mat-icon>
         </div>
-      </mat-form-field>
-      <mat-icon class="add-icon" (click)="addProduct()">add_circle_outline</mat-icon>
-    </div>
-    <table>
-      <p>
-        @for (product of filteredProducts(); track product.id) {
-          <app-product-item [product]="product" />
-        }
-      </p>
-    </table>
-    <hr />
+      </form>
+    </header>
+    <main>
+      <div class="items">
+        <p>
+          @for (product of filteredProducts(); track product.id) {
+            <app-product-item [product]="product" />
+          }
+        </p>
+        <hr />
+      </div>
+    </main>
   </div>
-</form>
+</body>

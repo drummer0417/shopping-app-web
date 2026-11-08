@@ -1,10 +1,11 @@
 <div class="form-wrapper">
   <div class="dialog_bg">
     <h4 mat-dialog-title>{{ title }}</h4>
-    <mat-dialog-content  class="dialog-center-content" [formGroup]="form">
+    <mat-dialog-content class="dialog-center-content" [formGroup]="form">
       <mat-form-field class="half-width">
         <mat-label>Omschrijving</mat-label>
         <input matInput formControlName="omschrijving" required />
+        <mat-error>Omschrijving is verplicht</mat-error>
       </mat-form-field>
 
       <mat-form-field class="half-width">
@@ -29,7 +30,7 @@
             <mat-option [value]="winkel">{{ winkel.naam }}</mat-option>
           }
         </mat-select>
-        <mat-error>Winkel is een verplicht veld </mat-error>
+        <mat-error>Winkel is verplicht</mat-error>
       </mat-form-field>
 
       <mat-form-field class="half-width">
@@ -39,7 +40,7 @@
             <mat-option [value]="categorie">{{ categorie.omschrijving }}</mat-option>
           }
         </mat-select>
-        <mat-error>Categorie is een verplicht veld </mat-error>
+        <mat-error>Categorie is verplicht</mat-error>
       </mat-form-field>
 
       <p>
@@ -72,8 +73,15 @@
           <mat-icon>cancel</mat-icon>
         </button>
       </div>
-      <div class="column-right"> 
-        <button matMiniFab class="btn-right" color="primary" (click)="onSave()" matTooltip="Opslaan" [disabled]="form.invalid">
+      <div class="column-right">
+        <button
+          matMiniFab
+          class="btn-right"
+          color="primary"
+          (click)="onSave()"
+          matTooltip="Opslaan"
+          [disabled]="form.invalid"
+        >
           <mat-icon>save</mat-icon>
         </button>
       </div>

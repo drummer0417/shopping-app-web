@@ -10,16 +10,34 @@ import { PageNotFound } from './page-not-found/page-not-found';
 import { Producten } from './product/producten/producten';
 import { Download } from './download/download';
 
-
 export const routes: Routes = [
   { path: '', component: App, canActivate: [authGuard] },
-  { path: 'login', component: Login, data: { breadcrumb: 'Login' }},
-  { path: 'logoff', component: Logoff, data: { breadcrumb: 'Logoff' }},
-  { path: 'home', component: Home, canActivate: [authGuard], data: { breadcrumb: 'Home' }},
-  { path: 'boodschappenlijst', component: BoodschappenLijst, canActivate: [authGuard], data: { breadcrumb: 'Lijstje maken' }},
-  { path: 'producten', component: Producten, canActivate: [authGuard], data: { breadcrumb: 'Producten' } },
-  { path: 'in-winkel', component: InWinkel, canActivate: [authGuard], data: { breadcrumb: 'In de winkel' }},
-  { path: 'download', component: Download, canActivate: [authGuard], data: { breadcrumb: 'Download' }},
-  { path: '**', component: PageNotFound, data: { breadcrumb: '404' } } ,
+  { path: 'login', component: Login, data: { breadcrumb: 'Login' } },
+  { path: 'logoff', component: Logoff, data: { breadcrumb: 'Logoff' } },
+  { path: 'home', component: Home, canActivate: [authGuard], data: { breadcrumb: 'Home' } },
+  {
+    path: 'boodschappenlijst',
+    component: BoodschappenLijst,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Lijstje maken' },
+  },
+  {
+    path: 'producten',
+    component: Producten,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Producten' },
+  },
+  {
+    path: 'in-winkel',
+    component: InWinkel,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'In de winkel' },
+  },
+  {
+    path: 'download',
+    component: Download,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Download' },
+  },
+  { path: '**', component: PageNotFound, data: { breadcrumb: '404' } },
 ];
-

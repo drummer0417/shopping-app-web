@@ -4,7 +4,7 @@
     @include mat.toolbar-overrides((container-background-color: var(--mat-sys-primary),
             container-text-color: var(--mat-sys-on-primary),
         ));
-        position: fixed;
+    position: fixed;
 }
 
 .toolbar-title {
@@ -34,6 +34,7 @@
 .nav-top {
     margin-top: 70px;
 }
+
 .spacer {
     flex: 1 1 auto;
 }

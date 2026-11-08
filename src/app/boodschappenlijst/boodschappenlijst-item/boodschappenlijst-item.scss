@@ -1,6 +1,6 @@
 .picked {
-    color: rgb(32, 32, 37);
-    background: #dae3f0;
+  color: rgb(32, 32, 37);
+  background: #e1edf8;
 }
 
 .aanbieding {
@@ -8,24 +8,28 @@
 }
 
 table {
-  width: 98%;
+  width: 100%;
 }
 
 .table-container {
   width: 100%;
   overflow-x: visible;
   border-collapse: collapse;
-  -webkit-overflow-scrolling: touch; /* Voor soepel scrollen op iOS */
+  -webkit-overflow-scrolling: touch;
+  /* Voor soepel scrollen op iOS */
 }
 
 td {
   overflow-wrap: anywhere;
-  word-break: break-word; /* Voor oudere browsers */
+  word-break: break-word;
+  padding-top: 5px;
+  /* Voor oudere browsers */
 }
 
 td:nth-child(1) {
-  width: 50px; 
+  width: 50px;
   font-size: 30px;
+  padding-left: 7px;
 }
 
 td:nth-child(2) {
@@ -33,7 +37,13 @@ td:nth-child(2) {
 }
 
 td:nth-child(3) {
-  width: 60px; 
-  text-align: right; 
+  width: 60px;
+  text-align: right;
   vertical-align: top;
+  padding-right: 7px;
+}
+
+hr {
+  margin-top: 0px;
+  margin-bottom: 2px;
 }

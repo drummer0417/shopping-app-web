@@ -1,47 +1,47 @@
 // .dialog_bg {
-//     background-color: white;
-//     }
+//   background-color: rgb(229, 107, 107);
+// }
+
 
 mat-form-field {
-    margin-top: 5px;
-    margin-right: 10px;
+  padding-top: 4px;
+  margin-right: 7px;
 }
 
 .form-wrapper {
-    margin: 10;
-    // margin-top:10px;
-    width: 95%;
-    align-items: center;
+  margin: 10;
+  align-items: center;
 }
 
 .half-width {
-    width: 240px;
+  width: 266px;
 }
 
 .full-width {
-    width: 490px;
+  width: 500px;
 }
 
 .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    column-gap: 16px;
-    row-gap: 100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  column-gap: 16px;
+  row-gap: 100px;
 }
 
 .spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 
 .triple-button-container {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  align-items: center; /* Zorgt dat ze verticaal mooi uitlijnen */
+  align-items: center;
+  /* Zorgt dat ze verticaal mooi uitlijnen */
 }
 
 /* De kolommen verdelen de ruimte, NIET de buttons zelf */
-.triple-button-container > div {
+.triple-button-container>div {
   flex: 1;
   display: flex;
 }
@@ -60,5 +60,6 @@ mat-form-field {
 
 td {
   overflow-wrap: anywhere;
-  word-break: break-word; /* Voor oudere browsers */
+  word-break: break-word;
+  /* Voor oudere browsers */
 }

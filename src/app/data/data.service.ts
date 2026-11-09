@@ -31,8 +31,8 @@ export class DataService {
   private orderedArticles = signal<OrderedArticle[]>([]);
 
   private queryUser: string = '';
-  private sorteervolgorde: string = localStorage.getItem('sortsequence') || 'LOCATIE'; // 'LOCATIE';
 
+  sorteervolgorde = signal<string>(localStorage.getItem('sortsequence') || 'LOCATIE');
   alleProducten = this.producten.asReadonly();
   alleCategorien = this.categorien.asReadonly();
   alleWinkels = this.winkels.asReadonly();
@@ -183,7 +183,7 @@ export class DataService {
   setSorteerVolgorde(
     sorteervolgorde: 'LOCATIE' | 'DATUM-ON' | 'DATUM-NO' | 'WINKEL-AZ' | 'WINKEL-ZA',
   ) {
-    this.sorteervolgorde = sorteervolgorde;
+    this.sorteervolgorde.set(sorteervolgorde);
     localStorage.setItem('sortsequence', sorteervolgorde);
     const sorted = this.sortProducts(this.producten());
     this.producten.update((values) => sorted);
@@ -420,7 +420,7 @@ export class DataService {
   }
 
   private sortProducts(products: Product[]): Product[] {
-    switch (this.sorteervolgorde) {
+    switch (this.sorteervolgorde()) {
       case 'LOCATIE': {
         const sorted = this.sortByLocatie(products);
         return sorted;

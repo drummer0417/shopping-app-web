@@ -1,20 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { AuthService } from './auth/auth.service';
-import { getAuth } from '@angular/fire/auth';
-import {
-  Router,
-  RouterOutlet,
-  RouterLink,
-  ActivatedRoute,
-  NavigationEnd,
-} from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { Router, RouterOutlet, RouterLink, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
@@ -47,8 +34,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSidenavModule,
     RouterLink,
     MatToolbarModule,
-    MatSelect
-],
+    MatSelect,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -62,12 +49,11 @@ export class App {
   router = inject(Router);
   route = inject(ActivatedRoute);
   title = inject(Title);
-  sorteervolgorde  = 'LOCATIE'
+  sorteervolgorde = this.dataService.sorteervolgorde;
 
   constructor() {
-    this.router.events
-    .pipe(filter((event) => event instanceof NavigationEnd))
-    .subscribe(() => {
+    // this.sorteervolgorde = localStorage.getItem;
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       const child = this.getChild(this.route);
       child.data.subscribe((data) => {
         this.breadcrumb = data['breadcrumb'] || '...';
@@ -76,7 +62,6 @@ export class App {
     });
     this.selectedColor = this.themeService.color();
     this.selectedMode = this.themeService.mode();
-
     this.router.navigate(['/home']);
   }
 

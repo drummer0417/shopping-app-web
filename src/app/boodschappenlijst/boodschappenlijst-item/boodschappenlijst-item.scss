@@ -16,13 +16,11 @@ table {
   overflow-x: visible;
   border-collapse: collapse;
   -webkit-overflow-scrolling: touch;
-  /* Voor soepel scrollen op iOS */
 }
 
 td {
   overflow-wrap: anywhere;
   word-break: break-word;
-  padding-top: 5px;
   /* Voor oudere browsers */
 }
 

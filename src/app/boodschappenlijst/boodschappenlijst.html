@@ -5,12 +5,10 @@
         <div class="input-container">
           <mat-form-field class="search" appearance="outline">
             <mat-label>Zoek product...</mat-label>
-            <div class="input-container">
-              <input matInput type="text" formControlName="searchValue" />
-              @if (searchValue()) {
-                <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
-              }
-            </div>
+            <input matInput type="text" formControlName="searchValue" />
+            @if (searchValue()) {
+              <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
+            }
           </mat-form-field>
         </div>
       </form>

@@ -16,20 +16,18 @@ mat-grid-tile {
   column-gap: 16px;
 }
 
-/* Zorgt ervoor dat het veld krimpt en groeit met de kolom */
-mat-form-field {
-  width: 100%;
-  /* Voorkomt dat het input-veld de grid-kolom oprekt op smalle schermen */
-  min-width: 0;
-  // padding-top: 5px;
-  // background-color: rgb(229, 107, 107);
-}
-
-/* Op schermen kleiner dan 768px: schakel over naar 1 kolom */
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;
+    width: 99%;
   }
+}
+
+mat-form-field {
+  width: 100%;
+  min-width: 0;
+  // padding-top: 5px;
+  // background-color: rgb(229, 107, 107);
 }
 
 .triple-button-container {

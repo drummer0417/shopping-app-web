@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { Product, OrderedArticle } from '../../data/model';
+import { Article, OrderedArticle } from '../../data/model';
 import { DataService } from '../../data/data.service';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,19 +11,18 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './boodschappenlijst-item.scss',
 })
 export class BoodschappenlijstItem {
-  @Input() product!: Product;
+  @Input() article!: Article;
   private dataService = inject(DataService);
 
   onResetProduct() {
-    this.product.aantalBesteld = 0;
-    this.dataService.updateOrderedArticle(this.product);
+    this.article.ordered = 0;
+    this.dataService.updateOrderedArticle(this.article);
   }
 
-  onAddProduct() {
-    console.log('onAddProduct clicked');
-    ++this.product.aantalBesteld;
-    this.product.picked = false;
-    this.dataService.updateOrderedArticle(this.product);
+  onAddArticle() {
+    console.log('onAddArticle clicked');
+    ++this.article.ordered;
+    this.article.picked = false;
+    this.dataService.updateOrderedArticle(this.article);
   }
-  
 }

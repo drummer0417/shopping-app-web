@@ -5,7 +5,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Product } from '../data/model';
+import { Article } from '../data/model';
 
 @Component({
   imports: [
@@ -22,19 +22,19 @@ import { Product } from '../data/model';
 export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
-  alleProducten: Product[] = this.dataService.getAllProductsWithNumberOrdered();
+  AllArticles: Article[] = this.dataService.getAllArticlesWithNumberOrdered();
 
   searchValue = signal('');
   filteredBoodschappenlijst = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
-    const products = this.alleProducten;
+    const articles = this.AllArticles;
     if (!search) {
-      return products;
+      return articles;
     }
-    return products.filter(
-      (product) =>
-        product.omschrijving?.toUpperCase().includes(search) ||
-        product.merk?.toUpperCase().includes(search),
+    return articles.filter(
+      (article) =>
+        article.description?.toUpperCase().includes(search) ||
+        article.brand?.toUpperCase().includes(search),
     );
   });
 

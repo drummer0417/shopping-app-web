@@ -12,7 +12,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DataService } from '../../data/data.service';
 import { MatSelectModule } from '@angular/material/select';
-import { Product } from '../../data/model';
+import { Article } from '../../data/model';
 import { MatOptionModule } from '@angular/material/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
@@ -42,35 +42,37 @@ import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialo
 export class EditProductDialog {
   confirmationDialog = inject(MatDialog);
   dataService = inject(DataService);
-  categorien = this.dataService.getCategorienSorted();
-  winkels = this.dataService.getWinkelsSorted();
+  categories = this.dataService.getCategoriesSorted();
+  shops = this.dataService.getShopsSorted();
   dialogTitle: string = 'Aanpassen product';
   form: FormGroup;
   title?: string;
 
   constructor(
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { product: Product; title: string },
+    @Inject(MAT_DIALOG_DATA) public data: { article: Article; title: string },
     public dialogRef: MatDialogRef<EditProductDialog>,
   ) {
     this.title = this.data.title === 'Add' ? 'Toevoegen procuct' : 'Wijzigen product';
     this.form = this.fb.group({
-      id: [this.data.product.id],
-      omschrijving: [this.data.product.omschrijving],
-      merk: [this.data.product.merk],
-      prijs: [this.data.product.prijs],
-      winkel: [this.data.product.winkel],
-      eenheid: [this.data.product.eenheid],
-      aanbieding: [this.data.product.aanbieding],
-      categorie: [this.data.product.categorie],
-      opmerking: [this.data.product.opmerking],
-      aantalBesteld: [this.data.product.aantalBesteld],
-      picked: [this.data.product.picked],
+      id: [this.data.article.id],
+      description: [this.data.article.description],
+      brand: [this.data.article.brand],
+      price: [this.data.article.price],
+      shop: [this.data.article.shop],
+      uom: [this.data.article.uom],
+      specialOffer: [this.data.article.specialOffer],
+      category: [this.data.article.category],
+      note: [this.data.article.note],
+      ordered: [this.data.article.ordered],
+      picked: [this.data.article.picked],
     });
   }
 
   onSave() {
-    this.dialogRef.close({ action: 'save', product: this.form.value });
+    console.log(this.form.value);
+
+    this.dialogRef.close({ action: 'save', article: this.form.value });
   }
 
   onCancel() {
@@ -79,7 +81,6 @@ export class EditProductDialog {
 
   onDelete() {
     this.openConfirmDialog();
-    // this.dialogRef.close({ action: 'delete', product: this.form.value });
   }
 
   openConfirmDialog(): void {
@@ -87,26 +88,24 @@ export class EditProductDialog {
       width: '350px',
       data: {
         title: 'Bevestig',
-        message: 'Wil je "' + this.data.product.omschrijving + '" verwijderen?',
+        message: 'Wil je "' + this.data.article.description + '" verwijderen?',
       },
     });
 
     dialogRef.afterClosed().subscribe((bevestigd: boolean) => {
       if (bevestigd) {
-        this.dialogRef.close({ action: 'delete', product: this.form.value });
+        this.dialogRef.close({ action: 'delete', article: this.form.value });
       } else {
         this.dialogRef.close({ action: 'cancel' });
       }
     });
   }
 
-  compareWinkels(winkel1: any, winkel2: any): boolean {
-    return winkel1 && winkel2 ? winkel1.id === winkel2.id : winkel1 === winkel2;
+  compareShops(shop1: any, shop2: any): boolean {
+    return shop1 && shop2 ? shop1.id === shop2.id : shop1 === shop2;
   }
 
-  compareCategorien(categorie1: any, categorie2: any): boolean {
-    return categorie1 && categorie2
-      ? categorie1.omschrijving === categorie2.omschrijving
-      : categorie1 === categorie2;
+  compareCategorien(category1: any, category2: any): boolean {
+    return category1 && category2 ? category1.id === category2.id : category1 === category2;
   }
 }

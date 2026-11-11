@@ -2,7 +2,7 @@ import { Component, inject, Input, input, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Product } from '../../data/model';
+import { Article } from '../../data/model';
 import { DataService } from '../../data/data.service';
 
 @Component({
@@ -12,14 +12,14 @@ import { DataService } from '../../data/data.service';
   templateUrl: './in-winkel-item.html',
 })
 export class InWinkeltItem {
-  @Input() product!: Product;
+  @Input() article!: Article;
   private dataService = inject(DataService);
 
   onSwapPicked() {
-    console.log(this.product.id);
-    if (this.product.id !==  null) {
-      this.product.picked = !this.product.picked;
-      this.dataService.updatePickedOrderedArticle(this.product);
+    console.log(this.article.id);
+    if (this.article.id !== null) {
+      this.article.picked = !this.article.picked;
+      this.dataService.updatePickedOrderedArticle(this.article);
     }
   }
 }

@@ -1,12 +1,8 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DataService } from '../../data/data.service';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { InWinkeltItem } from '../in-winkel-item/in-winkel-item';
-import { Product } from '../../data/model';
-import { CdkColumnDef } from '@angular/cdk/table';
-import { MatAnchor, MatIconButton } from '@angular/material/button';
+import { Article } from '../../data/model';
 import { MatIconModule } from '@angular/material/icon';
-import { filter } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialog';
 
@@ -18,12 +14,12 @@ import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialo
 })
 export class InWinkel {
   dataService = inject(DataService);
-  besteldeProducten = signal<Product[]>([]);
+  besteldeProducten = signal<Article[]>([]);
   confirmationDialog = inject(MatDialog);
   pickedProducten = computed(() => {
     var number = 0;
-    this.besteldeProducten().forEach((procuct: Product) => {
-      if (procuct.picked) {
+    this.besteldeProducten().forEach((article: Article) => {
+      if (article.picked) {
         number++;
       }
     });
@@ -62,7 +58,7 @@ export class InWinkel {
 
     dialogRef.afterClosed().subscribe((bevestigd: boolean) => {
       if (bevestigd) {
-        this.dataService.resetOrderedAndPickedProduct();
+        this.dataService.resetOrderedAndPickedArticles();
       }
     });
   }

@@ -1,81 +1,34 @@
-<div class="form-wrapper">
+<div class="dialog">
   <!-- <div class="dialog_bg"> -->
   <h3 class="title" mat-dialog-title>{{ title }}</h3>
   <mat-dialog-content class="dialog-center-content" [formGroup]="form">
     <div class="form-grid">
-      <!-- <mat-grid-list [cols]="cols$ | async" rowHeight="70px" gutterSize="10">
-        <mat-grid-tile>
-          <mat-form-field>
-            <mat-label>Omschrijving</mat-label>
-            <input matInput formControlName="omschrijving" required />
-            <mat-error>Omschrijving is verplicht</mat-error>
-          </mat-form-field>
-          1</mat-grid-tile
-        >
-
-        <mat-grid-tile>
-          <mat-form-field>
-            <mat-label>Omschrijving</mat-label>
-            <input matInput formControlName="omschrijving" required />
-            <mat-error>Omschrijving is verplicht</mat-error>
-          </mat-form-field>
-          2
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-           <mat-form-field>
-            <mat-label>Omschrijving</mat-label>
-            <input matInput formControlName="omschrijving" required />
-            <mat-error>Omschrijving is verplicht</mat-error>
-          </mat-form-field>
-          3
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-           <mat-form-field>
-            <mat-label>Omschrijving</mat-label>
-            <input matInput formControlName="omschrijving" required />
-            <mat-error>Omschrijving is verplicht</mat-error>
-          </mat-form-field> 
-          4
-        </mat-grid-tile>
-
-        <mat-grid-tile>
-           <mat-form-field>
-            <mat-label>Omschrijving</mat-label>
-            <input matInput formControlName="omschrijving" required />
-            <mat-error>Omschrijving is verplicht</mat-error>
-          </mat-form-field> 
-          5
-        </mat-grid-tile>
-      </mat-grid-list> -->
-
       <mat-form-field>
         <mat-label>Omschrijving</mat-label>
-        <input matInput formControlName="omschrijving" required />
+        <input matInput formControlName="description" required />
         <mat-error>Omschrijving is verplicht</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Merk</mat-label>
-        <input matInput type="text" formControlName="merk" />
+        <input matInput type="text" formControlName="brand" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Prijs</mat-label>
-        <input matInput type="number" formControlName="prijs" />
+        <input matInput type="number" formControlName="price" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Eenhied</mat-label>
-        <input matInput type="text" formControlName="eenheid" />
+        <input matInput type="text" formControlName="uom" />
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>winkel</mat-label>
-        <mat-select formControlName="winkel" [compareWith]="compareWinkels" required>
-          @for (winkel of winkels; track winkel.id) {
-            <mat-option [value]="winkel">{{ winkel.naam }}</mat-option>
+        <mat-select formControlName="shop" [compareWith]="compareShops" required>
+          @for (shop of shops; track shop.id) {
+            <mat-option [value]="shop">{{ shop.name }}</mat-option>
           }
         </mat-select>
         <mat-error>Winkel is verplicht</mat-error>
@@ -83,9 +36,9 @@
 
       <mat-form-field>
         <mat-label>categorie</mat-label>
-        <mat-select formControlName="categorie" [compareWith]="compareCategorien" required>
-          @for (categorie of categorien; track categorie.omschrijving) {
-            <mat-option [value]="categorie">{{ categorie.omschrijving }}</mat-option>
+        <mat-select formControlName="category" [compareWith]="compareCategorien" required>
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category">{{ category.description }}</mat-option>
           }
         </mat-select>
         <mat-error>Categorie is verplicht</mat-error>
@@ -97,14 +50,14 @@
           cdkTextareaAutosize
           matInput
           maxLength="200"
-          #opmerking
-          formControlName="opmerking"
+          #note
+          formControlName="note"
         ></textarea>
-        <mat-hint align="end">{{ opmerking.value.length }} / 200</mat-hint>
+        <mat-hint align="end">{{ note.value.length }} / 200</mat-hint>
       </mat-form-field>
     </div>
 
-    <mat-checkbox formControlName="aanbieding">Aanbieding</mat-checkbox>
+    <mat-checkbox formControlName="specialOffer">Aanbieding</mat-checkbox>
   </mat-dialog-content>
   <mat-dialog-actions class="triple-button-container">
     @if (title?.startsWith('Wijzig')) {

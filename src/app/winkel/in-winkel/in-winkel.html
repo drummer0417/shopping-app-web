@@ -7,8 +7,8 @@
   </div>
   <table>
     <p>
-      @for (product of besteldeProducten(); track product.id) {
-        <app-in-winkel-item [product]="product" />
+      @for (article of besteldeProducten(); track article.id) {
+        <app-in-winkel-item [article]="article" />
       }
     </p>
   </table>

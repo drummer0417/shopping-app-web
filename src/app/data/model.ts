@@ -13,48 +13,19 @@ export interface Article {
   shop: Shop;
   specialOffer: boolean;
   uom: string;
-  opmerking: string;
+  note: string;
 }
-
-export interface Product {
-  id?: string;
-  merk: string;
-  categorie: Categorie;
-  wijzigdatum: Timestamp;
-  omschrijving: string;
-  aantalBesteld: number;
-  picked: boolean;
-  prijs: number;
-  winkel: Winkel;
-  aanbieding: boolean;
-  eenheid: string;
-  opmerking: string;
-}
-
 export interface Category {
   id?: string;
   dateModified: Timestamp;
   description: string;
   location: number;
 }
-export interface Categorie {
-  id?: string;
-  wijzigdatum: Timestamp;
-  omschrijving: string;
-  locatie: number;
-}
-
 export interface Shop {
   id?: string;
   dateModified: Timestamp;
   name: string;
 }
-export interface Winkel {
-  id?: string;
-  wijzigdatum: Timestamp;
-  naam: string;
-}
-
 export interface OrderedArticle {
   id?: string;
   numberOrdered: number;
@@ -62,6 +33,5 @@ export interface OrderedArticle {
 }
 
 export interface ShoppingListItem {
-   description: string;
-   
+  description: string;
 }

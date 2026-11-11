@@ -16,8 +16,8 @@
     <main>
       <div class="items">
         <p>
-          @for (product of filteredBoodschappenlijst(); track product.id) {
-            <app-boodschappenlijst-item [product]="product" />
+          @for (article of filteredBoodschappenlijst(); track article.id) {
+            <app-boodschappenlijst-item [article]="article" />
           }
         </p>
       </div>

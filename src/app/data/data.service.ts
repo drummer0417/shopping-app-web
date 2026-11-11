@@ -13,7 +13,7 @@ import {
 } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
-import { Article, Categorie, Category, OrderedArticle, Product, Shop, Winkel } from './model';
+import { Article, Category, OrderedArticle, Shop } from './model';
 import { Observable, of, switchMap, filter } from 'rxjs';
 
 const DESC = 1;
@@ -25,17 +25,17 @@ export class DataService {
   private firestore = inject(Firestore);
   private auth = inject(Auth);
 
-  private producten = signal<Product[]>([]);
-  private categorien = signal<Categorie[]>([]);
-  private winkels = signal<Winkel[]>([]);
+  private articles = signal<Article[]>([]);
+  private categories = signal<Category[]>([]);
+  private shops = signal<Shop[]>([]);
   private orderedArticles = signal<OrderedArticle[]>([]);
 
   private queryUser: string = '';
 
-  sorteervolgorde = signal<string>(localStorage.getItem('sortsequence') || 'LOCATIE');
-  alleProducten = this.producten.asReadonly();
-  alleCategorien = this.categorien.asReadonly();
-  alleWinkels = this.winkels.asReadonly();
+  sortSequence = signal<string>(localStorage.getItem('sortsequence') || 'LOCATIE');
+  allArticless = this.articles.asReadonly();
+  allCategories = this.categories.asReadonly();
+  allShops = this.shops.asReadonly();
   articlesFetched = signal(false);
   categoriesFetched = signal(false);
   shopsFetched = signal(false);
@@ -68,9 +68,9 @@ export class DataService {
         const user = { ...(doc.data() as User), id: doc.id };
         if (user.firebaseUID === this.auth.currentUser?.uid) {
           this.queryUser = user.id;
-          this.fetchProducten();
+          this.fetchArticles();
           this.fetchCategorien();
-          this.fetchWinkels();
+          this.fetchShops();
           this.fetchOrderedArticles();
         }
       });
@@ -81,32 +81,32 @@ export class DataService {
     return null;
   }
 
-  private async fetchProducten(): Promise<void> {
+  private async fetchArticles(): Promise<void> {
     try {
       const articleRef = collection(this.firestore, 'Users', this.queryUser, 'Articles');
       const querySnapshot = await getDocs(articleRef);
-      const products: Product[] = [];
+      const articles: Article[] = [];
 
       querySnapshot.forEach((doc) => {
         const article = { ...(doc.data() as Article), id: doc.id };
-        products.push(this.mapArticleToProduct(article));
+        articles.push(article);
       });
-      this.producten.set(this.sortProducts(products));
+      this.articles.set(this.sortArticles(articles));
       this.articlesFetched.set(true);
       this.allDataFetched.set(
-        this.alleCategorien() &&
+        this.allCategories() &&
           this.categoriesFetched() &&
           this.shopsFetched() &&
           this.categoriesFetched(),
       );
-      this.producten().forEach((product) => {
-        if (!product.categorie.id) {
-          console.log(product);
+      this.articles().forEach((article) => {
+        if (!article.category.id) {
+          console.log(article);
         }
       });
-      console.log('aantal producten: ' + this.producten().length);
+      console.log('# articles: ' + this.articles().length);
     } catch (error) {
-      console.error('Fout bij ophalen producten:', error);
+      console.error('Fout bij ophalen articles:', error);
     }
   }
 
@@ -114,14 +114,10 @@ export class DataService {
     const categoryRef = collection(this.firestore, 'Users', this.queryUser, 'Categories');
     (collectionData(categoryRef, { idField: 'id' }) as Observable<Category[]>).subscribe(
       (categories) => {
-        const categorien: Categorie[] = [];
-        categories.forEach((category: Category) => {
-          categorien.push(this.mapCategoryToCategorie(category));
-        });
-        this.categorien.set(categorien);
+        this.categories.set(categories);
         this.categoriesFetched.set(true);
         this.allDataFetched.set(
-          this.alleCategorien() &&
+          this.allCategories() &&
             this.categoriesFetched() &&
             this.shopsFetched() &&
             this.categoriesFetched(),
@@ -130,19 +126,15 @@ export class DataService {
     );
   }
 
-  private fetchWinkels(): void {
+  private fetchShops(): void {
     // const userId = queryUser ? queryUser : 'unknown'
     const shopRef = collection(this.firestore, 'Users', this.queryUser, 'Shops');
     // collectionData(shopRef, { idField: 'id' }).subscribe((shops: any) => {
     (collectionData(shopRef, { idField: 'id' }) as Observable<Shop[]>).subscribe((shops) => {
-      const winkels: Winkel[] = [];
-      shops.forEach((shop: Shop) => {
-        winkels.push(this.mapShopToWinkel(shop));
-      });
-      this.winkels.set(winkels);
+      this.shops.set(shops);
       this.shopsFetched.set(true);
       this.allDataFetched.set(
-        this.alleCategorien() &&
+        this.allCategories() &&
           this.categoriesFetched() &&
           this.shopsFetched() &&
           this.categoriesFetched(),
@@ -157,7 +149,7 @@ export class DataService {
       this.orderedArticles.set(orderedArticles);
       this.orderedArticlesFetched.set(true);
       this.allDataFetched.set(
-        this.alleCategorien() &&
+        this.allCategories() &&
           this.categoriesFetched() &&
           this.shopsFetched() &&
           this.categoriesFetched(),
@@ -165,57 +157,53 @@ export class DataService {
     });
   }
 
-  getCategorienSorted(): Categorie[] {
-    return this.alleCategorien().sort((a, b) => {
-      if (a.omschrijving < b.omschrijving) return -1;
-      if (a.omschrijving > b.omschrijving) return 1;
+  getCategoriesSorted(): Category[] {
+    return this.allCategories().sort((a, b) => {
+      if (a.description < b.description) return -1;
+      if (a.description > b.description) return 1;
       return 0;
     });
   }
 
-  getWinkelsSorted(): Winkel[] {
-    return this.alleWinkels().sort((a, b) => {
-      if (a.naam < b.naam) return -1;
-      if (a.naam > b.naam) return 1;
+  getShopsSorted(): Shop[] {
+    return this.allShops().sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
       return 0;
     });
   }
 
-  setSorteerVolgorde(
-    sorteervolgorde: 'LOCATIE' | 'DATUM-ON' | 'DATUM-NO' | 'WINKEL-AZ' | 'WINKEL-ZA',
-  ) {
-    this.sorteervolgorde.set(sorteervolgorde);
-    localStorage.setItem('sortsequence', sorteervolgorde);
-    const sorted = this.sortProducts(this.producten());
-    this.producten.update((values) => sorted);
+  setSortSequence(sortSequence: 'LOCATIE' | 'DATUM-ON' | 'DATUM-NO' | 'WINKEL-AZ' | 'WINKEL-ZA') {
+    this.sortSequence.set(sortSequence);
+    localStorage.setItem('sortsequence', sortSequence);
+    const sorted = this.sortArticles(this.articles());
+    this.articles.update((values) => sorted);
   }
 
-  updateOrderedArticle(product: Product) {
-    if (product.id && product.aantalBesteld === 0) {
-      this.deleteOrderedArticle(product.id);
+  updateOrderedArticle(article: Article) {
+    if (article.id && article.ordered === 0) {
+      this.deleteOrderedArticle(article.id);
     } else {
-      this.updateNumberOfOrderedProducts(product);
+      this.updateNumberOfOrderedArticles(article);
     }
   }
 
-  private async updateNumberOfOrderedProducts(orderedProduct: Product) {
-    // const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + orderedProduct.id );
-
+  private async updateNumberOfOrderedArticles(orderedArticle: Article) {
     const docRef = collection(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/');
-    const result = setDoc(doc(docRef, orderedProduct.id), {
-      numberOrdered: orderedProduct.aantalBesteld,
-      picked: orderedProduct.picked,
+    const result = setDoc(doc(docRef, orderedArticle.id), {
+      numberOrdered: orderedArticle.ordered,
+      picked: orderedArticle.picked,
     }).catch((error) => {
       console.log(error);
     });
   }
 
-  async updatePickedOrderedArticle(product: Product) {
+  async updatePickedOrderedArticle(article: Article) {
     const docRef = doc(
       this.firestore,
-      'Users/' + this.queryUser + '/OrderedArticles/' + product.id,
+      'Users/' + this.queryUser + '/OrderedArticles/' + article.id,
     );
-    await updateDoc(docRef, { picked: product.picked })
+    await updateDoc(docRef, { picked: article.picked })
       .then((result) => {})
       .catch((error) => {
         console.log(error);
@@ -231,29 +219,29 @@ export class DataService {
     }
   }
 
-  getOrderedArticles(): Product[] {
-    const all: Product[] = this.alleProducten();
+  getOrderedArticles(): Article[] {
+    const all: Article[] = this.allArticless();
     const ordered: OrderedArticle[] = this.orderedArticles();
 
     const articleMap = new Map(all.map((article) => [article.id, article]));
 
-    const besteldeProducten = ordered
+    const orderedArticles = ordered
       .map((ordered) => {
-        const product = articleMap.get(ordered.id);
-        if (!product) return null;
+        const article = articleMap.get(ordered.id);
+        if (!article) return null;
         return {
-          ...product,
-          aantalBesteld: ordered.numberOrdered,
+          ...article,
+          ordered: ordered.numberOrdered,
           picked: ordered.picked,
         };
       })
-      .filter((product): product is Product => !!product);
+      .filter((article): article is Article => !!article);
     // sort
-    return this.sortProducts(besteldeProducten);
+    return this.sortArticles(orderedArticles);
   }
 
-  getAllProductsWithNumberOrdered() {
-    const all: Product[] = this.alleProducten();
+  getAllArticlesWithNumberOrdered() {
+    const all: Article[] = this.allArticless();
     const ordered: OrderedArticle[] = this.orderedArticles();
 
     const orderedMap = new Map(
@@ -263,19 +251,18 @@ export class DataService {
     return all.map((all) => {
       const orderedArticle = orderedMap.get(all.id);
       if (!orderedArticle) {
-        all.aantalBesteld = 0;
+        all.ordered = 0;
         return all;
       }
       return {
         ...all,
-        aantalBesteld: orderedArticle.numberOrdered,
+        ordered: orderedArticle.numberOrdered,
         picked: orderedArticle.picked,
       };
     });
-    // .filter((product): product is Product => !!product);
   }
 
-  async resetOrderedAndPickedProduct() {
+  async resetOrderedAndPickedArticles() {
     this.orderedArticles().forEach((orderedArticel: OrderedArticle) => {
       if (orderedArticel.picked && orderedArticel.id) {
         this.deleteOrderedArticle(orderedArticel.id);
@@ -283,22 +270,20 @@ export class DataService {
     });
   }
 
-  async addProduct(selectedProduct: Product) {
-    selectedProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
-    selectedProduct.aantalBesteld = 0;
-    selectedProduct.picked = false;
-    const article: Article = this.mapProductToArticle(selectedProduct);
-    delete article.id;
+  async addArticle(newArticle: Article) {
+    newArticle.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
+    newArticle.ordered = 0;
+    newArticle.picked = false;
+    delete newArticle.id;
 
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
-      const docRef = await addDoc(colRef, article);
+      const docRef = await addDoc(colRef, newArticle);
       // .then((result) => {    })
-      selectedProduct.id = docRef.id;
-      if (!this.producten().some((p) => p.id === selectedProduct.id)) {
-        this.producten.update((values) => {
-          return this.sortProducts([...values, selectedProduct]);
-          // return this.sortProducts([...values, selectedProduct]);
+      newArticle.id = docRef.id;
+      if (!this.articles().some((p) => p.id === newArticle.id)) {
+        this.articles.update((values) => {
+          return this.sortArticles([...values, newArticle]);
         });
       }
     } catch (error) {
@@ -306,27 +291,30 @@ export class DataService {
     }
   }
 
-  async updateArticle(gewijzigdProduct: Product) {
+  async updateArticle(updatedArticle: Article) {
     try {
-      gewijzigdProduct.wijzigdatum = new Timestamp(new Date().getTime() / 1000, 0);
-      const article: Article = this.mapProductToArticle(gewijzigdProduct);
-      const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + article.id);
+      updatedArticle.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
+
+      const docRef = doc(
+        this.firestore,
+        'Users/' + this.queryUser + '/Articles/' + updatedArticle.id,
+      );
       await updateDoc(docRef, {
-        brand: article.brand,
-        category: article.category,
-        dateModified: article.dateModified,
-        description: article.description,
-        price: article.price,
-        shop: article.shop,
-        specialOffer: article.specialOffer,
-        uom: article.uom,
-        opmerking: article.opmerking,
+        brand: updatedArticle.brand,
+        category: updatedArticle.category,
+        dateModified: updatedArticle.dateModified,
+        description: updatedArticle.description,
+        price: updatedArticle.price,
+        shop: updatedArticle.shop,
+        specialOffer: updatedArticle.specialOffer,
+        uom: updatedArticle.uom,
+        note: updatedArticle.note,
       });
-      this.producten.update((currentProducten) => {
-        const gewijzigdeProductenLijst = currentProducten.map((product) =>
-          product.id === gewijzigdProduct.id ? gewijzigdProduct : product,
+      this.articles.update((currentArticles) => {
+        const updatedArticleList = currentArticles.map((article) =>
+          article.id === updatedArticle.id ? updatedArticle : article,
         );
-        return this.sortProducts(gewijzigdeProductenLijst);
+        return this.sortArticles(updatedArticleList);
       });
     } catch (error) {
       console.error('Error updating document: ', error);
@@ -334,83 +322,15 @@ export class DataService {
     return null;
   }
 
-  async deleteProcduct(id?: string) {
+  async deleteArticle(id?: string) {
     const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + id);
 
     try {
       await deleteDoc(docRef);
-      this.producten.update((currentProducts) => currentProducts.filter((p) => p.id !== id));
+      this.articles.update((currentArticles) => currentArticles.filter((p) => p.id !== id));
     } catch (error) {
       console.error('Fout bij het verwijderen van het document: ', error);
     }
-  }
-
-  private mapProductToArticle(product: Product): Article {
-    return {
-      id: product.id,
-      brand: this.toUppercase(product.merk),
-      category: this.mapCategorieToCategory(product.categorie),
-      dateModified: product.wijzigdatum,
-      description: this.toUppercase(product.omschrijving),
-      ordered: product.aantalBesteld,
-      picked: product.picked,
-      price: product.prijs,
-      shop: this.mapWinkelToShop(product.winkel),
-      specialOffer: product.aanbieding,
-      uom: product.eenheid,
-      opmerking: this.toUppercase(product.opmerking),
-    };
-  }
-
-  private mapArticleToProduct(article: Article): Product {
-    return {
-      id: article.id,
-      merk: article.brand,
-      categorie: this.mapCategoryToCategorie(article.category),
-      wijzigdatum: article.dateModified,
-      omschrijving: article.description,
-      aantalBesteld: article.ordered,
-      picked: article.picked,
-      prijs: article.price,
-      winkel: this.mapShopToWinkel(article.shop),
-      aanbieding: article.specialOffer,
-      eenheid: article.uom,
-      opmerking: article.opmerking,
-    };
-  }
-
-  private mapWinkelToShop(winkel: Winkel): Shop {
-    return {
-      id: winkel.id,
-      dateModified: winkel.wijzigdatum,
-      name: winkel.naam,
-    };
-  }
-
-  private mapShopToWinkel(shop: Shop): Winkel {
-    return {
-      id: shop.id,
-      wijzigdatum: shop.dateModified,
-      naam: shop.name,
-    };
-  }
-
-  private mapCategoryToCategorie(category: Category): Categorie {
-    return {
-      id: category.id,
-      wijzigdatum: category.dateModified, // new Timestamp(new Date().getTime() / 1000, 0),
-      omschrijving: category.description,
-      locatie: category.location,
-    };
-  }
-
-  private mapCategorieToCategory(categorie: Categorie): Category {
-    return {
-      id: categorie.id,
-      dateModified: categorie.wijzigdatum,
-      description: categorie.omschrijving,
-      location: categorie.locatie,
-    };
   }
 
   private toUppercase(value: string): string {
@@ -420,46 +340,46 @@ export class DataService {
     return value[0].toUpperCase() + value.slice(1);
   }
 
-  private sortProducts(products: Product[]): Product[] {
-    switch (this.sorteervolgorde()) {
+  private sortArticles(articles: Article[]): Article[] {
+    switch (this.sortSequence()) {
       case 'LOCATIE': {
-        const sorted = this.sortByLocatie(products);
+        const sorted = this.sortByLocatie(articles);
         return sorted;
       }
       case 'DATUM-ON': {
-        return this.sortByDate(products, ASC);
+        return this.sortByDate(articles, ASC);
       }
       case 'DATUM-NO': {
-        return this.sortByDate(products, DESC);
+        return this.sortByDate(articles, DESC);
       }
       case 'WINKEL-AZ': {
-        return this.sortByWinkel(products, ASC);
+        return this.sortByWinkel(articles, ASC);
       }
       case 'WINKEL-ZA': {
-        return this.sortByWinkel(products, DESC);
+        return this.sortByWinkel(articles, DESC);
       }
       default: {
         console.log('ignore');
-        return products;
+        return articles;
       }
     }
   }
 
-  private sortByLocatie(producten: Product[]): Product[] {
-    const sorted = producten.sort((a, b) => {
+  private sortByLocatie(articles: Article[]): Article[] {
+    const sorted = articles.sort((a, b) => {
       const locA =
-        a.categorie && typeof a.categorie.locatie === 'number' ? a.categorie.locatie : null;
+        a.category && typeof a.category.location === 'number' ? a.category.location : null;
       const locB =
-        b.categorie && typeof b.categorie.locatie === 'number' ? b.categorie.locatie : null;
+        b.category && typeof b.category.location === 'number' ? b.category.location : null;
 
       if (locA !== locB) {
-        if (locA === null) return 1; // a heeft geen locatie/categorie, dus b komt eerst
-        if (locB === null) return -1; // b heeft geen locatie/categorie, dus a komt eerst
+        if (locA === null) return 1; // a heeft geen locatie/category, dus b komt eerst
+        if (locB === null) return -1; // b heeft geen locatie/category, dus a komt eerst
         return locA - locB; // Numerieke sortering (laag naar hoog)
       }
 
-      const descA = (a.omschrijving || '').toUpperCase();
-      const descB = (b.omschrijving || '').toUpperCase();
+      const descA = (a.description || '').toUpperCase();
+      const descB = (b.description || '').toUpperCase();
 
       if (descA < descB) return -1;
       if (descA > descB) return 1;
@@ -469,34 +389,35 @@ export class DataService {
     return sorted;
   }
 
-  private sortByDate(producten: Product[], order: 1 | -1): Product[] {
-    const sorted = producten.sort((a, b) => {
-      if (a.wijzigdatum === null) return 1 * order;
-      if (b.wijzigdatum === null) return -1 * order;
+  private sortByDate(articles: Article[], order: 1 | -1): Article[] {
+    const sorted = articles.sort((a, b) => {
+      if (a.dateModified === null) return 1 * order;
+      if (b.dateModified === null) return -1 * order;
 
-      if (a.wijzigdatum.toMillis() !== b.wijzigdatum.toMillis()) {
-        if (a.wijzigdatum < b.wijzigdatum) return 1 * order;
-        if (a.wijzigdatum > b.wijzigdatum) return -1 * order;
+      if (a.dateModified.toMillis() !== b.dateModified.toMillis()) {
+        if (a.dateModified < b.dateModified) return 1 * order;
+        if (a.dateModified > b.dateModified) return -1 * order;
       }
-      if (a.omschrijving < b.omschrijving) return 1;
-      if (a.omschrijving > b.omschrijving) return -1;
+      if (a.description < b.description) return 1;
+      if (a.description > b.description) return -1;
+      if (a.description > b.description) return -1;
 
       return 0;
     });
     return sorted;
   }
 
-  private sortByWinkel(producten: Product[], order: 1 | -1): Product[] {
-    const sorted = producten.sort((a, b) => {
-      if (a.winkel?.naam === null) return 1 * order;
-      if (b.winkel?.naam === null) return -1 * order;
+  private sortByWinkel(articles: Article[], order: 1 | -1): Article[] {
+    const sorted = articles.sort((a, b) => {
+      if (a.shop?.name === null) return 1 * order;
+      if (b.shop?.name === null) return -1 * order;
 
-      if (a.winkel.naam !== b.winkel.naam) {
-        if (a.winkel.naam < b.winkel.naam) return 1 * order;
-        if (a.winkel.naam > b.winkel.naam) return -1 * order;
+      if (a.shop.name !== b.shop.name) {
+        if (a.shop.name < b.shop.name) return 1 * order;
+        if (a.shop.name > b.shop.name) return -1 * order;
       }
-      if (a.omschrijving < b.omschrijving) return -1;
-      if (a.omschrijving > b.omschrijving) return 1;
+      if (a.description < b.description) return -1;
+      if (a.description > b.description) return 1;
 
       return 0;
     });

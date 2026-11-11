@@ -3,17 +3,17 @@
     <tr (click)="onRowClicked()">
       <td>
         <strong>
-          {{ product.omschrijving }}
+          {{ article.description }}
         </strong>
         <br />
-        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
-        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'dd-MM-yyyy' }}
-        @if (product.opmerking) {
+        {{ article.shop.name }}, {{ article.brand }}, {{ article.category.description }},
+        {{ article.uom }}, {{ article.dateModified.toMillis() | date: 'dd-MM-yyyy' }}
+        @if (article.note) {
           <br />
-          {{ product.opmerking }}
+          {{ article.note }}
         }
       </td>
-      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+      <td [class.aanbieding]="article.specialOffer">{{ article.price | currency: 'EUR' }}</td>
     </tr>
   </tbody>
 </table>

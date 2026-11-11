@@ -57,7 +57,7 @@
             <mat-label>Sorteervolgorde</mat-label>
             <mat-select
               [(ngModel)]="sorteervolgorde"
-              (selectionChange)="dataService.setSorteerVolgorde($event.value)"
+              (selectionChange)="dataService.setSortSequence($event.value)"
             >
               <mat-option value="LOCATIE">Locatie</mat-option>
               <mat-option value="WINKEL-AZ">Winkel A-Z</mat-option>

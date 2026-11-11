@@ -1,23 +1,23 @@
 <hr />
 <table class="table-container">
   <tbody>
-    <tr [class.picked]="product.picked">
+    <tr [class.picked]="article.picked">
       <td>
-        @if (product.picked) {
+        @if (article.picked) {
           <mat-icon>check</mat-icon>
         } @else {
-          {{ product.aantalBesteld }}
+          {{ article.ordered }}
         }
       </td>
       <td (click)="onSwapPicked()">
         <strong>
-          {{ product.omschrijving }}
+          {{ article.description }}
         </strong>
         <br />
-        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
-        {{ product.eenheid }}
+        {{ article.shop.name }}, {{ article.brand }}, {{ article.category.description }},
+        {{ article.uom }}
       </td>
-      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+      <td [class.aanbieding]="article.specialOffer">{{ article.price | currency: 'EUR' }}</td>
     </tr>
   </tbody>
 </table>

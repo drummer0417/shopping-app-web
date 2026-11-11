@@ -1,5 +1,5 @@
 import { Component, effect, inject, Input } from '@angular/core';
-import { Product } from '../../data/model';
+import { Article } from '../../data/model';
 import { DataService } from '../../data/data.service';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,28 +16,31 @@ import { MatTable } from '@angular/material/table';
   styleUrl: './product-item.scss',
 })
 export class ProductItem {
-  @Input() product!: Product;
+  @Input() article!: Article;
   private dataService = inject(DataService);
   private readonly dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
   onRowClicked() {
+    console.log('this.article');
+    console.log(this.article);
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.maxWidth = '2000px';
-    dialogConfig.width = '70vw';
-    dialogConfig.data = { product: this.product, title: 'Update' };
+    dialogConfig.width = '90vw';
+    dialogConfig.data = { article: this.article, title: 'Update' };
     dialogConfig.autoFocus = true;
 
     const dialogRef = this.dialog.open(EditProductDialog, dialogConfig);
 
-    dialogRef.afterClosed().subscribe((result: { action: string; product: Product }) => {
+    dialogRef.afterClosed().subscribe((result: { action: string; article: Article }) => {
       if (result.action === 'save') {
-        this.dataService.updateArticle(result.product);
+        this.dataService.updateArticle(result.article);
         this.snackBar.open('Product gewijzigd', '', { duration: 5000 });
       } else if (result.action === 'delete') {
-        this.dataService.deleteProcduct(result.product.id);
-        this.snackBar.open(result.product.omschrijving + ' verwijderd', '', { duration: 5000 });
+        this.dataService.deleteArticle(result.article.id);
+        this.snackBar.open(result.article.description + ' verwijderd', '', { duration: 5000 });
       }
     });
   }

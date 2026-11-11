@@ -49,7 +49,7 @@ export class App {
   router = inject(Router);
   route = inject(ActivatedRoute);
   title = inject(Title);
-  sorteervolgorde = this.dataService.sorteervolgorde;
+  sorteervolgorde = this.dataService.sortSequence;
 
   constructor() {
     // this.sorteervolgorde = localStorage.getItem;

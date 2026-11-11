@@ -6,7 +6,7 @@ import { ProductItem } from '../product-item/product-item';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
-import { Product } from '../../data/model';
+import { Article } from '../../data/model';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { EditProductDialog } from '../edit-product-dialog/edit-product-dialog';
@@ -34,19 +34,19 @@ export class Producten implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  allProducts = this.dataService.alleProducten;
+  allArticles = this.dataService.allArticless;
   searchValue = signal('');
 
-  filteredProducts = computed(() => {
+  filteredArticles = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
-    const products = this.allProducts();
+    const articles = this.allArticles();
     if (!search) {
-      return products;
+      return articles;
     }
-    return products.filter(
-      (product) =>
-        product.omschrijving?.toUpperCase().includes(search) ||
-        product.merk?.toUpperCase().includes(search),
+    return articles.filter(
+      (article) =>
+        article.description?.toUpperCase().includes(search) ||
+        article.brand?.toUpperCase().includes(search),
     );
   });
 
@@ -54,7 +54,7 @@ export class Producten implements OnInit {
     searchValue: new FormControl('', {}),
   });
 
-  product = { prijs: 0 };
+  article = { price: 0 };
 
   ngOnInit(): void {
     const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {
@@ -71,16 +71,20 @@ export class Producten implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.maxWidth = '2000px';
-    dialogConfig.width = '70vw';
-    dialogConfig.data = { product: this.product, title: 'Add' };
+    this.dialog;
+    dialogConfig.minWidth = '90vw';
+    dialogConfig.data = { article: this.article, title: 'Add' };
     dialogConfig.autoFocus = true;
 
     const dialogRef = this.dialog.open(EditProductDialog, dialogConfig);
 
-    dialogRef.afterClosed().subscribe((result: { action: string; product: Product }) => {
+    dialogRef.afterClosed().subscribe((result: { action: string; article: Article }) => {
+      console.log(result.action);
+      console.log(result.article);
+
       if (result.action === 'save') {
-        this.dataService.addProduct(result.product);
-        this.snackBar.open(result.product.omschrijving + ' toegevoegd', '', { duration: 5000 });
+        this.dataService.addArticle(result.article);
+        this.snackBar.open(result.article.description + ' toegevoegd', '', { duration: 5000 });
       }
     });
   }

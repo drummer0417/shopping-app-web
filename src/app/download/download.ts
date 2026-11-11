@@ -18,19 +18,19 @@ export class Download {
   datePipe = inject(DatePipe);
 
   onDownloadArticles() {
-    const articles = JSON.stringify(this.dataService.alleProducten());
+    const articles = JSON.stringify(this.dataService.allArticless());
     const filename = 'articles_' + this.now();
     this.downloadService.download(articles, filename);
   }
 
   onDownloadCategories() {
-    const categories = JSON.stringify(this.dataService.getCategorienSorted());
+    const categories = JSON.stringify(this.dataService.getCategoriesSorted());
     const filename = 'categories_' + this.now();
     this.downloadService.download(categories, filename);
   }
 
   onDownloadShops() {
-    const shops = JSON.stringify(this.dataService.getWinkelsSorted());
+    const shops = JSON.stringify(this.dataService.getShopsSorted());
     const filename = 'shops_' + this.now();
     this.downloadService.download(shops, filename);
   }

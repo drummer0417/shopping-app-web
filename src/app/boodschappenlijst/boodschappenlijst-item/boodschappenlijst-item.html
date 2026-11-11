@@ -1,20 +1,20 @@
 <table class="table-container">
   <tbody>
-    <tr [class.picked]="product.aantalBesteld > 0">
+    <tr [class.picked]="article.ordered > 0">
       <td (click)="onResetProduct()">
-        <strong>{{ product.aantalBesteld }}</strong>
+        <strong>{{ article.ordered }}</strong>
       </td>
-      <td (click)="onAddProduct()">
-        <strong>{{ product.omschrijving }} </strong>
+      <td (click)="onAddArticle()">
+        <strong>{{ article.description }} </strong>
         <br />
-        {{ product.winkel.naam }}, {{ product.merk }}, {{ product.categorie.omschrijving }},
-        {{ product.eenheid }}, {{ product.wijzigdatum.toMillis() | date: 'dd-MM-yyyy' }}
-        @if (product.opmerking) {
+        {{ article.shop.name }}, {{ article.brand }}, {{ article.category.description }},
+        {{ article.uom }}, {{ article.dateModified.toMillis() | date: 'dd-MM-yyyy' }}
+        @if (article.note) {
           <br />
-          {{ product.opmerking }}
+          {{ article.note }}
         }
       </td>
-      <td [class.aanbieding]="product.aanbieding">{{ product.prijs | currency: 'EUR' }}</td>
+      <td [class.aanbieding]="article.specialOffer">{{ article.price | currency: 'EUR' }}</td>
     </tr>
   </tbody>
 </table>

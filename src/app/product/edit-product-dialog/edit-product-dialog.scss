@@ -1,36 +1,73 @@
 // .dialog_bg {
-//   background-color: rgb(229, 107, 107);
 // }
 
-
-mat-form-field {
-  padding-top: 4px;
-  margin-right: 7px;
+mat-grid-tile {
+  background: lightblue;
 }
 
-.form-wrapper {
-  margin: 10;
-  align-items: center;
-}
-
-.half-width {
-  width: 266px;
-}
-
-.full-width {
-  width: 500px;
-}
 
 .form-grid {
+  // background-color: rgb(229, 107, 107);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  /* Twee gelijke kolommen op grote schermen */
+  grid-template-columns: repeat(2, 1fr);
+  /* Ruimte tussen de rijen en kolommen */
   column-gap: 16px;
-  row-gap: 100px;
+  row-gap: 0px;
 }
 
-.spacer {
-  flex: 1 1 auto;
+/* Zorgt ervoor dat het veld krimpt en groeit met de kolom */
+mat-form-field {
+  width: 100%;
+  /* Voorkomt dat het input-veld de grid-kolom oprekt op smalle schermen */
+  min-width: 0;
+  padding-top: 5px;
+  // background-color: rgb(229, 107, 107);
 }
+
+/* Op schermen kleiner dan 768px: schakel over naar 1 kolom */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+
+
+
+// mat-form-field {
+//   padding-top: 4px;
+//   margin-right: 7px;
+//   width: 100%;
+// }
+
+// .form-wrapper {
+//   margin: 10;
+//   align-items: center;
+//   width: 600px;
+//   ;
+// }
+
+// .half-width {
+//   width: 266px;
+// }
+
+// .full-width {
+//   width: 500px;
+// }
+
+// .form-grid {
+//   display: grid;
+//   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+//   column-gap: 16px;
+//   row-gap: 100px;
+// }
+
+// .spacer {
+//   flex: 1 1 auto;
+// }
 
 .triple-button-container {
   display: flex;

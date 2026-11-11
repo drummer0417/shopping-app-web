@@ -24,8 +24,8 @@ export class ProductItem {
   onRowClicked() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.maxHeight = '2000px';
-    dialogConfig.maxWidth = '600px';
+    dialogConfig.maxWidth = '2000px';
+    dialogConfig.width = '70vw';
     dialogConfig.data = { product: this.product, title: 'Update' };
     dialogConfig.autoFocus = true;
 

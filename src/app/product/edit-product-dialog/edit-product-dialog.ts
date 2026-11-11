@@ -17,21 +17,30 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { Title } from '@angular/platform-browser';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { CdkTableModule } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-edit-product-dialog',
   imports: [
     ReactiveFormsModule,
+    CommonModule,
     MatButtonModule,
     MatCheckbox,
     MatDialogModule,
     MatFormFieldModule,
+    MatGridListModule,
     MatIconModule,
     MatInputModule,
     MatOptionModule,
     MatSelectModule,
     MatTooltip,
+    CdkTableModule,
   ],
+  standalone: true,
   templateUrl: './edit-product-dialog.html',
   styleUrl: './edit-product-dialog.scss',
 })
@@ -42,6 +51,11 @@ export class EditProductDialog {
   dialogTitle: string = 'Aanpassen product';
   form: FormGroup;
   title?: string;
+
+  private breakpointObserver = inject(BreakpointObserver);
+  readonly cols$ = this.breakpointObserver
+    .observe([Breakpoints.XSmall])
+    .pipe(map((state) => (state.matches ? 1 : 2)));
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +81,7 @@ export class EditProductDialog {
   onSave() {
     this.dialogRef.close({ action: 'save', product: this.form.value });
   }
-  
+
   onDelete() {
     this.dialogRef.close({ action: 'delete', product: this.form.value });
   }

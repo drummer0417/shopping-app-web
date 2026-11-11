@@ -4,7 +4,7 @@
     <header>
       <form [formGroup]="form">
         <div class="input-container">
-          <mat-form-field class="search">
+          <mat-form-field class="search" appearance="outline">
             <mat-label>Zoek product...</mat-label>
             <input matInput type="text" formControlName="searchValue" />
             @if (searchValue()) {

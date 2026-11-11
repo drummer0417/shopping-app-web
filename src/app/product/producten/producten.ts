@@ -28,14 +28,13 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './producten.scss',
   templateUrl: './producten.html',
 })
-
-export class Producten  implements OnInit {
+export class Producten implements OnInit {
   private dataService = inject(DataService);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  allProducts = this.dataService.alleProducten; 
+  allProducts = this.dataService.alleProducten;
   searchValue = signal('');
 
   filteredProducts = computed(() => {
@@ -44,9 +43,10 @@ export class Producten  implements OnInit {
     if (!search) {
       return products;
     }
-    return products.filter((product) => 
-      product.omschrijving?.toUpperCase().includes(search) ||
-      product.merk?.toUpperCase().includes(search)
+    return products.filter(
+      (product) =>
+        product.omschrijving?.toUpperCase().includes(search) ||
+        product.merk?.toUpperCase().includes(search),
     );
   });
 
@@ -54,7 +54,7 @@ export class Producten  implements OnInit {
     searchValue: new FormControl('', {}),
   });
 
-  product = { prijs: 0};
+  product = { prijs: 0 };
 
   ngOnInit(): void {
     const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {
@@ -70,8 +70,8 @@ export class Producten  implements OnInit {
   addProduct(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.maxHeight = '2000px';
-    dialogConfig.maxWidth = '600px';
+    dialogConfig.maxWidth = '2000px';
+    dialogConfig.width = '70vw';
     dialogConfig.data = { product: this.product, title: 'Add' };
     dialogConfig.autoFocus = true;
 
@@ -81,7 +81,7 @@ export class Producten  implements OnInit {
       if (result.action === 'save') {
         this.dataService.addProduct(result.product);
         this.snackBar.open(result.product.omschrijving + ' toegevoegd', '', { duration: 5000 });
-      } 
+      }
     });
   }
 }

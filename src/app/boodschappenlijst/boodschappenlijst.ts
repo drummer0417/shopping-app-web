@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  computed,
-  DestroyRef,
-  signal,
-} from '@angular/core';
+import { Component, inject, OnInit, computed, DestroyRef, signal } from '@angular/core';
 import { DataService } from '../data/data.service';
 import { BoodschappenlijstItem } from './boodschappenlijst-item/boodschappenlijst-item';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { Product } from '../data/model';
 
 @Component({
-  imports: [ReactiveFormsModule, BoodschappenlijstItem, MatIconModule, MatInputModule, MatCardModule],
+  imports: [
+    ReactiveFormsModule,
+    BoodschappenlijstItem,
+    MatIconModule,
+    MatInputModule,
+    MatCardModule,
+  ],
   selector: 'app-boodschappen',
   styleUrl: './boodschappenlijst.scss',
   templateUrl: './boodschappenlijst.html',
@@ -24,20 +23,20 @@ export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
   alleProducten: Product[] = this.dataService.getAllProductsWithNumberOrdered();
+
   searchValue = signal('');
- 
   filteredBoodschappenlijst = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
     const products = this.alleProducten;
     if (!search) {
       return products;
     }
-    return products.filter((product) => 
-      product.omschrijving?.toUpperCase().includes(search) ||
-      product.merk?.toUpperCase().includes(search)
+    return products.filter(
+      (product) =>
+        product.omschrijving?.toUpperCase().includes(search) ||
+        product.merk?.toUpperCase().includes(search),
     );
   });
-
 
   form = new FormGroup({
     searchValue: new FormControl('', {}),
@@ -49,9 +48,8 @@ export class BoodschappenLijst implements OnInit {
     });
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
   }
-  
+
   resetSearchValue() {
     this.form.controls.searchValue.reset();
   }
-
 }

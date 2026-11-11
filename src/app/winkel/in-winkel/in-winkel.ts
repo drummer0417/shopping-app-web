@@ -7,6 +7,8 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { MatAnchor, MatIconButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { filter } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialog';
 
 @Component({
   imports: [InWinkeltItem, MatIconModule],
@@ -17,6 +19,7 @@ import { filter } from 'rxjs';
 export class InWinkel {
   dataService = inject(DataService);
   besteldeProducten = signal<Product[]>([]);
+  confirmationDialog = inject(MatDialog);
   pickedProducten = computed(() => {
     var number = 0;
     this.besteldeProducten().forEach((procuct: Product) => {
@@ -27,7 +30,7 @@ export class InWinkel {
     return number;
   });
 
-  constructor () {
+  constructor() {
     effect(() => {
       this.besteldeProducten.set(this.dataService.getOrderedArticles());
     });
@@ -39,12 +42,28 @@ export class InWinkel {
     // }
     // console.log('this.dataService.getBesteldeProducten2()...');
     // console.log(this.dataService.getBesteldeProducten());
-    
   }
 
   resetOrderedAndPicked() {
     console.log('resetOrderedAndPicked');
-    
-    this.dataService.resetOrderedAndPickedProduct();
+    if (this.pickedProducten().valueOf() > 0) {
+      this.openConfirmDialog();
+    }
+  }
+
+  openConfirmDialog(): void {
+    const dialogRef = this.confirmationDialog.open(ConfirmationDialog, {
+      width: '350px',
+      data: {
+        title: 'Bevestig',
+        message: 'Alle producten die al in het karretje liggen wil verwijderen?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((bevestigd: boolean) => {
+      if (bevestigd) {
+        this.dataService.resetOrderedAndPickedProduct();
+      }
+    });
   }
 }

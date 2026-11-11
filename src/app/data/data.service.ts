@@ -41,6 +41,7 @@ export class DataService {
   shopsFetched = signal(false);
   orderedArticlesFetched = signal(false);
   allDataFetched = signal<boolean>(false);
+  totalAmountOrderd = signal<number>(0);
 
   constructor() {
     authState(this.auth)

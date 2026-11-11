@@ -4,6 +4,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogModule,
   MatDialogRef,
   MatDialogTitle,
@@ -15,19 +16,14 @@ import { Product } from '../../data/model';
 import { MatOptionModule } from '@angular/material/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
-import { Title } from '@angular/platform-browser';
 import { MatTooltip } from '@angular/material/tooltip';
-import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { map } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { CdkTableModule } from '@angular/cdk/table';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialog';
 
 @Component({
   selector: 'app-edit-product-dialog',
   imports: [
     ReactiveFormsModule,
-    CommonModule,
     MatButtonModule,
     MatCheckbox,
     MatDialogModule,
@@ -38,24 +34,19 @@ import { CdkTableModule } from '@angular/cdk/table';
     MatOptionModule,
     MatSelectModule,
     MatTooltip,
-    CdkTableModule,
   ],
   standalone: true,
   templateUrl: './edit-product-dialog.html',
   styleUrl: './edit-product-dialog.scss',
 })
 export class EditProductDialog {
+  confirmationDialog = inject(MatDialog);
   dataService = inject(DataService);
   categorien = this.dataService.getCategorienSorted();
   winkels = this.dataService.getWinkelsSorted();
   dialogTitle: string = 'Aanpassen product';
   form: FormGroup;
   title?: string;
-
-  private breakpointObserver = inject(BreakpointObserver);
-  readonly cols$ = this.breakpointObserver
-    .observe([Breakpoints.XSmall])
-    .pipe(map((state) => (state.matches ? 1 : 2)));
 
   constructor(
     private fb: FormBuilder,
@@ -82,12 +73,31 @@ export class EditProductDialog {
     this.dialogRef.close({ action: 'save', product: this.form.value });
   }
 
-  onDelete() {
-    this.dialogRef.close({ action: 'delete', product: this.form.value });
-  }
-
   onCancel() {
     this.dialogRef.close({ action: 'cancel' });
+  }
+
+  onDelete() {
+    this.openConfirmDialog();
+    // this.dialogRef.close({ action: 'delete', product: this.form.value });
+  }
+
+  openConfirmDialog(): void {
+    const dialogRef = this.confirmationDialog.open(ConfirmationDialog, {
+      width: '350px',
+      data: {
+        title: 'Bevestig',
+        message: 'Wil je "' + this.data.product.omschrijving + '" verwijderen?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((bevestigd: boolean) => {
+      if (bevestigd) {
+        this.dialogRef.close({ action: 'delete', product: this.form.value });
+      } else {
+        this.dialogRef.close({ action: 'cancel' });
+      }
+    });
   }
 
   compareWinkels(winkel1: any, winkel2: any): boolean {

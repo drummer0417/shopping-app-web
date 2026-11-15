@@ -22,14 +22,11 @@ export class ProductItem {
   private snackBar = inject(MatSnackBar);
 
   onRowClicked() {
-    console.log('this.article');
-    console.log(this.article);
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.maxWidth = '2000px';
+    dialogConfig.maxWidth = '800px';
     dialogConfig.width = '90vw';
-    dialogConfig.data = { article: this.article, title: 'Update' };
+    dialogConfig.data = { article: this.article, title: 'Wijzigen product' };
     dialogConfig.autoFocus = true;
 
     const dialogRef = this.dialog.open(EditProductDialog, dialogConfig);

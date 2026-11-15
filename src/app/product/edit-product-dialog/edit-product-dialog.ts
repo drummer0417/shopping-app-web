@@ -46,14 +46,12 @@ export class EditProductDialog {
   shops = this.dataService.getShopsSorted();
   dialogTitle: string = 'Aanpassen product';
   form: FormGroup;
-  title?: string;
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: { article: Article; title: string },
     public dialogRef: MatDialogRef<EditProductDialog>,
   ) {
-    this.title = this.data.title === 'Add' ? 'Toevoegen procuct' : 'Wijzigen product';
     this.form = this.fb.group({
       id: [this.data.article.id],
       description: [this.data.article.description],
@@ -70,8 +68,6 @@ export class EditProductDialog {
   }
 
   onSave() {
-    console.log(this.form.value);
-
     this.dialogRef.close({ action: 'save', article: this.form.value });
   }
 

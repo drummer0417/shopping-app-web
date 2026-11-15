@@ -34,7 +34,7 @@ export class Producten implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  allArticles = this.dataService.allArticless;
+  allArticles = this.dataService.allArticles;
   searchValue = signal('');
 
   filteredArticles = computed(() => {
@@ -70,18 +70,13 @@ export class Producten implements OnInit {
   addProduct(): void {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    dialogConfig.maxWidth = '2000px';
-    this.dialog;
-    dialogConfig.minWidth = '90vw';
-    dialogConfig.data = { article: this.article, title: 'Add' };
+    dialogConfig.maxWidth = '800px';
+    dialogConfig.width = '90vw';
+    dialogConfig.data = { article: this.article, title: 'Toevoegen product' };
     dialogConfig.autoFocus = true;
-
     const dialogRef = this.dialog.open(EditProductDialog, dialogConfig);
 
     dialogRef.afterClosed().subscribe((result: { action: string; article: Article }) => {
-      console.log(result.action);
-      console.log(result.article);
-
       if (result.action === 'save') {
         this.dataService.addArticle(result.article);
         this.snackBar.open(result.article.description + ' toegevoegd', '', { duration: 5000 });

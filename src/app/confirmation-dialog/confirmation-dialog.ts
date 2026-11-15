@@ -12,6 +12,7 @@ export interface ConfirmDialogData {
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
   templateUrl: './confirmation-dialog.html',
+  styleUrl: './confirmation-dialog.scss',
 })
 export class ConfirmationDialog {
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData) {}

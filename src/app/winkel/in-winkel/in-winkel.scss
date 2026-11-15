@@ -1,15 +1,36 @@
+header {
+  align-content: center;
+  text-align: center;
+  margin: 70px 16px 0px 0px;
+  height: 56px;
+  // background: #f88;
+  justify-content: space-between;
+}
+
+main {
+  flex: 1;
+  overflow: auto;
+  margin-top: -10px;
+  //   background: lightgreen;
+}
+
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 table {
   width: 98%;
   border-collapse: collapse;
 }
 
-hr {
-  width: 98%;
-  margin-top: -10px;
-  margin-right: 0px;
-  margin-left: 0px;
-  margin-bottom: 0px;
-}
+// hr {
+//   width: 98%;
+//   align-items: start;
+// }
 
 .container {
   display: grid;

@@ -1,16 +1,23 @@
-<div class="page">
-  <div class="container">
-    <p>{{ pickedProducten() }} / {{ besteldeProducten().length }}</p>
-    <!-- <button mat-button > -->
-    <mat-icon class="reset-icon" (click)="resetOrderedAndPicked()">published_with_changes</mat-icon>
-    <!-- </button> -->
+<body>
+  <div class="page-layout">
+    <header>
+      <div class="container">
+        <p>{{ pickedProducten() }} / {{ besteldeProducten().length }}</p>
+        <mat-icon class="reset-icon" (click)="resetOrderedAndPicked()"
+          >published_with_changes</mat-icon
+        >
+      </div>
+      <hr />
+    </header>
+    <main>
+      <table>
+        <p>
+          @for (article of besteldeProducten(); track article.id) {
+            <app-in-winkel-item [article]="article" />
+          }
+        </p>
+      </table>
+      <!-- <hr /> -->
+    </main>
   </div>
-  <table>
-    <p>
-      @for (article of besteldeProducten(); track article.id) {
-        <app-in-winkel-item [article]="article" />
-      }
-    </p>
-  </table>
-  <hr />
-</div>
+</body>

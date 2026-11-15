@@ -1,0 +1,21 @@
+@use '@angular/material' as mat;
+
+.error-button {
+    //     // background-color: inherit;
+    //     color: rgb(252, 53, 53);
+    // }
+
+    @include mat.button-overrides(( // Voor filled / raised / tonal buttons
+            filled-container-color: var(--mat-sys-error),
+            filled-label-text-color: var(--mat-sys-on-error),
+            protected-container-color: var(--mat-sys-error),
+            protected-label-text-color: var(--mat-sys-on-error),
+
+            // Voor standaard text / outlined buttons
+            text-label-text-color: var(--mat-sys-error),
+            outlined-label-text-color: var(--mat-sys-error),
+            outlined-outline-color: var(--mat-sys-error),
+        ))
+}
+
+;

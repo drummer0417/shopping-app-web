@@ -16,7 +16,6 @@ export class InWinkeltItem {
   private dataService = inject(DataService);
 
   onSwapPicked() {
-    console.log(this.article.id);
     if (this.article.id !== null) {
       this.article.picked = !this.article.picked;
       this.dataService.updatePickedOrderedArticle(this.article);

@@ -42,6 +42,13 @@ main {
   .search {
     flex-grow: 1; // Zorgt ervoor dat het zoekveld alle beschikbare ruimte links inneemt
     width: 100%;
+    margin-right: 10px;
+  }
+
+  .total-amount {
+    // width: 50px;
+    font-size: 20px;
+    padding-left: 1px;
   }
 
   .close-icon {

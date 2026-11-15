@@ -1,6 +1,6 @@
 <div class="dialog">
   <!-- <div class="dialog_bg"> -->
-  <h3 class="title" mat-dialog-title>{{ title }}</h3>
+  <h3 class="title" mat-dialog-title>{{ data.title }}</h3>
   <mat-dialog-content class="dialog-center-content" [formGroup]="form">
     <div class="form-grid">
       <mat-form-field>
@@ -59,23 +59,21 @@
 
     <mat-checkbox formControlName="specialOffer">Aanbieding</mat-checkbox>
   </mat-dialog-content>
+
   <mat-dialog-actions class="triple-button-container">
-    @if (title?.startsWith('Wijzig')) {
+    @if (data.title.startsWith('Wijzig')) {
       <div class="column-left">
-        <button matMiniFab class="btn-left" (click)="onDelete()" matTooltip="Verijderen">
+        <button matMiniFab (click)="onDelete()" class="btn-delete" matTooltip="Verwijderen">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
     }
-    <div class="column-center">
-      <button mat-mini-fab class="btn-center" (click)="onCancel()" matTooltip="Annuleren">
+    <div class="column-right">
+      <button mat-mini-fab (click)="onCancel()" class="btn-cancel" matTooltip="Annuleren">
         <mat-icon>cancel</mat-icon>
       </button>
-    </div>
-    <div class="column-right">
       <button
         matMiniFab
-        class="btn-right"
         color="primary"
         (click)="onSave()"
         matTooltip="Opslaan"

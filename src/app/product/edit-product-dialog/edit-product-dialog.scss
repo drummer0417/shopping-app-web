@@ -3,14 +3,9 @@
 // .dialog_bg {
 // }
 
-mat-grid-tile {
-  background: lightblue;
-}
+
 
 .form-grid {
-  // background-color: rgb(229, 107, 107);
-  // background-color: map.get($primary-map, 30);
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 16px;
@@ -38,7 +33,16 @@ mat-form-field {
   /* Zorgt dat ze verticaal mooi uitlijnen */
 }
 
-/* De kolommen verdelen de ruimte, NIET de buttons zelf */
+.btn-cancel {
+  background-color: inherit;
+  margin-right: 24px;
+}
+
+.btn-delete {
+  background-color: inherit;
+  color: rgb(252, 53, 53);
+}
+
 .triple-button-container>div {
   flex: 1;
   display: flex;
@@ -48,12 +52,9 @@ mat-form-field {
   justify-content: flex-start;
 }
 
-.column-center {
-  justify-content: center;
-}
-
 .column-right {
   justify-content: flex-end;
+  padding-right: 22px;
 }
 
 td {

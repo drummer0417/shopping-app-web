@@ -10,6 +10,9 @@
               <mat-icon class="close-icon" (click)="resetSearchValue()">close</mat-icon>
             }
           </mat-form-field>
+          <div class="total-amount">
+            {{ totalAmount() | currency: 'EUR' }}
+          </div>
         </div>
       </form>
     </header>

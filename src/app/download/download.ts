@@ -18,7 +18,7 @@ export class Download {
   datePipe = inject(DatePipe);
 
   onDownloadArticles() {
-    const articles = JSON.stringify(this.dataService.allArticless());
+    const articles = JSON.stringify(this.dataService.allArticles());
     const filename = 'articles_' + this.now();
     this.downloadService.download(articles, filename);
   }

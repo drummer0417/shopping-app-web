@@ -33,7 +33,7 @@ export class DataService {
   private queryUser: string = '';
 
   sortSequence = signal<string>(localStorage.getItem('sortsequence') || 'LOCATIE');
-  allArticless = this.articles.asReadonly();
+  allArticles = this.articles.asReadonly();
   allCategories = this.categories.asReadonly();
   allShops = this.shops.asReadonly();
   articlesFetched = signal(false);
@@ -173,6 +173,18 @@ export class DataService {
     });
   }
 
+  getAmountOrderd() {
+    console.log('in getAmountOrderd');
+
+    var totalAmount = 0;
+    this.getOrderedArticles().forEach((article) => {
+      totalAmount = totalAmount + article.ordered * article.price;
+    });
+    console.log('total amount: ' + totalAmount);
+
+    return totalAmount;
+  }
+
   setSortSequence(sortSequence: 'LOCATIE' | 'DATUM-ON' | 'DATUM-NO' | 'WINKEL-AZ' | 'WINKEL-ZA') {
     this.sortSequence.set(sortSequence);
     localStorage.setItem('sortsequence', sortSequence);
@@ -181,14 +193,15 @@ export class DataService {
   }
 
   updateOrderedArticle(article: Article) {
+    this.updateArticlesSignal(article);
     if (article.id && article.ordered === 0) {
       this.deleteOrderedArticle(article.id);
     } else {
-      this.updateNumberOfOrderedArticles(article);
+      this.updateNumberOfOrderedArticls(article);
     }
   }
 
-  private async updateNumberOfOrderedArticles(orderedArticle: Article) {
+  private async updateNumberOfOrderedArticls(orderedArticle: Article) {
     const docRef = collection(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/');
     const result = setDoc(doc(docRef, orderedArticle.id), {
       numberOrdered: orderedArticle.ordered,
@@ -210,17 +223,19 @@ export class DataService {
       });
   }
 
-  async deleteOrderedArticle(id: string) {
-    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + id);
-    try {
-      await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Fout bij het verwijderen van OrederedArticle: ', error);
+  async deleteOrderedArticle(id?: string) {
+    if (id) {
+      const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/OrderedArticles/' + id);
+      try {
+        await deleteDoc(docRef);
+      } catch (error) {
+        console.error('Fout bij het verwijderen van OrederedArticle: ', error);
+      }
     }
   }
 
   getOrderedArticles(): Article[] {
-    const all: Article[] = this.allArticless();
+    const all: Article[] = this.allArticles();
     const ordered: OrderedArticle[] = this.orderedArticles();
 
     const articleMap = new Map(all.map((article) => [article.id, article]));
@@ -241,7 +256,7 @@ export class DataService {
   }
 
   getAllArticlesWithNumberOrdered() {
-    const all: Article[] = this.allArticless();
+    const all: Article[] = this.allArticles();
     const ordered: OrderedArticle[] = this.orderedArticles();
 
     const orderedMap = new Map(
@@ -310,16 +325,20 @@ export class DataService {
         uom: updatedArticle.uom,
         note: updatedArticle.note,
       });
-      this.articles.update((currentArticles) => {
-        const updatedArticleList = currentArticles.map((article) =>
-          article.id === updatedArticle.id ? updatedArticle : article,
-        );
-        return this.sortArticles(updatedArticleList);
-      });
+      this.updateArticlesSignal(updatedArticle);
     } catch (error) {
       console.error('Error updating document: ', error);
     }
     return null;
+  }
+
+  private updateArticlesSignal(updatedArticle: Article) {
+    this.articles.update((currentArticles) => {
+      const updatedArticleList = currentArticles.map((article) =>
+        article.id === updatedArticle.id ? updatedArticle : article,
+      );
+      return this.sortArticles(updatedArticleList);
+    });
   }
 
   async deleteArticle(id?: string) {
@@ -328,6 +347,7 @@ export class DataService {
     try {
       await deleteDoc(docRef);
       this.articles.update((currentArticles) => currentArticles.filter((p) => p.id !== id));
+      this.deleteOrderedArticle(id);
     } catch (error) {
       console.error('Fout bij het verwijderen van het document: ', error);
     }

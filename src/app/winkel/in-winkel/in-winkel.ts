@@ -32,16 +32,7 @@ export class InWinkel {
     });
   }
 
-  ngOnInit(): void {
-    // if (!this.dataService.alleProducten() || this.dataService.alleProducten().length === 0) {
-    //   this.dataService.initData();
-    // }
-    // console.log('this.dataService.getBesteldeProducten2()...');
-    // console.log(this.dataService.getBesteldeProducten());
-  }
-
   resetOrderedAndPicked() {
-    console.log('resetOrderedAndPicked');
     if (this.pickedProducten().valueOf() > 0) {
       this.openConfirmDialog();
     }
@@ -52,7 +43,7 @@ export class InWinkel {
       width: '350px',
       data: {
         title: 'Bevestig',
-        message: 'Alle producten die al in het karretje liggen wil verwijderen?',
+        message: 'Alle producten die al in het karretje liggen verwijderen?',
       },
     });
 

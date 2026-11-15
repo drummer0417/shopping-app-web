@@ -14,8 +14,9 @@ export class BoodschappenlijstItem {
   @Input() article!: Article;
   private dataService = inject(DataService);
 
-  onResetProduct() {
+  onResetArticle() {
     this.article.ordered = 0;
+    this.article.picked = false;
     this.dataService.updateOrderedArticle(this.article);
   }
 

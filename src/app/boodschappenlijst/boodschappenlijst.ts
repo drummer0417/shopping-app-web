@@ -24,12 +24,14 @@ import { CurrencyPipe } from '@angular/common';
 export class BoodschappenLijst implements OnInit {
   destroyRef = inject(DestroyRef);
   dataService = inject(DataService);
-  orderedArticles: Article[] = this.dataService.getAllArticlesWithNumberOrdered();
+  orderedArticlesOLD: Article[] = this.dataService.getAllArticlesWithNumberOrdered();
+  orderedArticles = computed(() => this.dataService.getAllArticlesWithNumberOrdered());
   totalAmount = computed(() => this.dataService.getAmountOrderd());
   searchValue = signal('');
+
   filteredBoodschappenlijst = computed(() => {
     const search = this.searchValue().trim().toUpperCase();
-    const articles = this.orderedArticles;
+    const articles = this.orderedArticles();
     if (!search) {
       return articles;
     }

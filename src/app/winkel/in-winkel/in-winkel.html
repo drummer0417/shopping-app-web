@@ -2,7 +2,7 @@
   <div class="page-layout">
     <header>
       <div class="container">
-        <p>{{ pickedProducten() }} / {{ besteldeProducten().length }}</p>
+        <p>{{ pickedArticles() }} / {{ orderedArticles().length }}</p>
         <mat-icon class="reset-icon" (click)="resetOrderedAndPicked()"
           >published_with_changes</mat-icon
         >
@@ -12,7 +12,7 @@
     <main>
       <table>
         <p>
-          @for (article of besteldeProducten(); track article.id) {
+          @for (article of orderedArticles(); track article.id) {
             <app-in-winkel-item [article]="article" />
           }
         </p>

@@ -14,11 +14,11 @@ import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialo
 })
 export class InWinkel {
   dataService = inject(DataService);
-  besteldeProducten = signal<Article[]>([]);
+  orderedArticles = computed(() => this.dataService.getOrderedArticles());
   confirmationDialog = inject(MatDialog);
-  pickedProducten = computed(() => {
+  pickedArticles = computed(() => {
     var number = 0;
-    this.besteldeProducten().forEach((article: Article) => {
+    this.orderedArticles().forEach((article: Article) => {
       if (article.picked) {
         number++;
       }
@@ -26,24 +26,18 @@ export class InWinkel {
     return number;
   });
 
-  constructor() {
-    effect(() => {
-      this.besteldeProducten.set(this.dataService.getOrderedArticles());
-    });
-  }
-
   resetOrderedAndPicked() {
-    if (this.pickedProducten().valueOf() > 0) {
-      this.openConfirmDialog();
+    if (this.pickedArticles().valueOf() > 0) {
+      this.openConfirmationDialog();
     }
   }
 
-  openConfirmDialog(): void {
+  openConfirmationDialog(): void {
     const dialogRef = this.confirmationDialog.open(ConfirmationDialog, {
       width: '350px',
       data: {
         title: 'Bevestig',
-        message: 'Alle producten die al in het karretje liggen verwijderen?',
+        message: 'Producten die al in het karretje liggen verwijderen?',
       },
     });
 

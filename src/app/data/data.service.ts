@@ -286,6 +286,8 @@ export class DataService {
   }
 
   async addArticle(newArticle: Article) {
+    newArticle.description = this.toUppercase(newArticle.description);
+    newArticle.brand = this.toUppercase(newArticle.brand);
     newArticle.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
     newArticle.ordered = 0;
     newArticle.picked = false;
@@ -294,7 +296,6 @@ export class DataService {
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Articles/');
       const docRef = await addDoc(colRef, newArticle);
-      // .then((result) => {    })
       newArticle.id = docRef.id;
       if (!this.articles().some((p) => p.id === newArticle.id)) {
         this.articles.update((values) => {
@@ -308,6 +309,8 @@ export class DataService {
 
   async updateArticle(updatedArticle: Article) {
     try {
+      updatedArticle.description = this.toUppercase(updatedArticle.description);
+      updatedArticle.brand = this.toUppercase(updatedArticle.brand);
       updatedArticle.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
 
       const docRef = doc(

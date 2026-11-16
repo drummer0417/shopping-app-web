@@ -1,5 +1,11 @@
-import { Component, inject, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, forwardRef, inject, Inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -49,8 +55,8 @@ export class EditProductDialog {
 
   constructor(
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { article: Article; title: string },
     public dialogRef: MatDialogRef<EditProductDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: { article: Article; title: string },
   ) {
     this.form = this.fb.group({
       id: [this.data.article.id],

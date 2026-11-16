@@ -54,7 +54,7 @@ export class Producten implements OnInit {
     searchValue: new FormControl('', {}),
   });
 
-  article = { price: 0 };
+  article = { price: 0, specialOffer: false };
 
   ngOnInit(): void {
     const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {

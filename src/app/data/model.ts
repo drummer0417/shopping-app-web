@@ -15,6 +15,7 @@ export interface Article {
   uom: string;
   note: string;
 }
+
 export interface Category {
   id?: string;
   dateModified: Timestamp;

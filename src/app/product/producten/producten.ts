@@ -2,7 +2,7 @@ import { Component, DestroyRef, effect, inject, OnInit, computed, signal } from 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../../data/data.service';
-import { ProductItem } from '../product-item/product-item';
+import { ProductItem } from '../product-detail/product-detail';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';

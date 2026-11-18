@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, computed, DestroyRef, signal, Signal } from '@angular/core';
 import { DataService } from '../data/data.service';
-import { BoodschappenlijstItem } from './boodschappenlijst-item/boodschappenlijst-item';
+import { BoodschappenlijstItem } from './boodschappenlijst-detail/boodschappenlijst-detail';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';

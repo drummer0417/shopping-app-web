@@ -32,8 +32,8 @@ export class CategorieDetail {
     const dialogRef = this.dialog.open(EditCategoryDialog, dialogConfig);
     dialogRef.afterClosed().subscribe((result: { action: string; category: Category }) => {
       if (result.action === 'save') {
-        this.dataService.addCategory(result.category);
-        this.snackBar.open('Categorie ' + result.category.description + ' toegevoegd', '', {
+        // this.dataService.updateCategory(result.category);
+        this.snackBar.open('Categorie ' + result.category.description + ' gewijzigd', '', {
           duration: 5000,
         });
       } else if (result.action === 'delete') {

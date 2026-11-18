@@ -1,5 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
-import { Article, OrderedArticle } from '../../data/model';
+import { Article } from '../../data/model';
 import { DataService } from '../../data/data.service';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-boodschappenlijst-item',
   imports: [CurrencyPipe, DatePipe, MatIconModule],
-  templateUrl: './boodschappenlijst-item.html',
-  styleUrl: './boodschappenlijst-item.scss',
+  templateUrl: './boodschappenlijst-detail.html',
+  styleUrl: './boodschappenlijst-detail.scss',
 })
 export class BoodschappenlijstItem {
   @Input() article!: Article;

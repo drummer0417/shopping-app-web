@@ -12,8 +12,8 @@ import { MatTable } from '@angular/material/table';
 @Component({
   selector: 'app-product-item',
   imports: [CurrencyPipe, DatePipe, MatButtonModule, MatDialogModule, MatIconModule],
-  templateUrl: './product-item.html',
-  styleUrl: './product-item.scss',
+  templateUrl: './product-detail.html',
+  styleUrl: './product-detail.scss',
 })
 export class ProductItem {
   @Input() article!: Article;

@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { Article } from '../../data/model';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { EditProductDialog } from '../edit-product-dialog/edit-product-dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -22,7 +21,6 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule,
     MatCardModule,
     MatTableModule,
-    MatTabsModule,
   ],
   selector: 'app-producten',
   styleUrl: './producten.scss',
@@ -54,8 +52,6 @@ export class Producten implements OnInit {
     searchValue: new FormControl('', {}),
   });
 
-  article = { price: 0, specialOffer: false };
-
   ngOnInit(): void {
     const subscription = this.form.controls.searchValue.valueChanges.subscribe((value) => {
       this.searchValue.set(value || '');
@@ -72,7 +68,7 @@ export class Producten implements OnInit {
     dialogConfig.disableClose = true;
     dialogConfig.maxWidth = '800px';
     dialogConfig.width = '90vw';
-    dialogConfig.data = { article: this.article, title: 'Toevoegen product' };
+    dialogConfig.data = { article: { price: 0, specialOffer: false }, title: 'Toevoegen product' };
     dialogConfig.autoFocus = true;
     const dialogRef = this.dialog.open(EditProductDialog, dialogConfig);
 

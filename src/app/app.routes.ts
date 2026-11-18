@@ -9,6 +9,7 @@ import { Logoff } from './logoff/logoff';
 import { PageNotFound } from './page-not-found/page-not-found';
 import { Producten } from './product/producten/producten';
 import { Download } from './download/download';
+import { Categories } from './beheer/categories/categories/categories';
 
 export const routes: Routes = [
   { path: '', component: App, canActivate: [authGuard] },
@@ -32,6 +33,12 @@ export const routes: Routes = [
     component: InWinkel,
     canActivate: [authGuard],
     data: { breadcrumb: 'In de winkel' },
+  },
+  {
+    path: 'categories',
+    component: Categories,
+    canActivate: [authGuard],
+    data: { breadcrumb: 'Categorieën' },
   },
   {
     path: 'download',

@@ -157,10 +157,33 @@ export class DataService {
     });
   }
 
-  getCategoriesSorted(): Category[] {
+  categoryExists(category: Category): boolean {
+    var exists = false;
+    this.categories().forEach((c) => {
+      if (
+        c.description.toUpperCase() === category.description.toUpperCase() ||
+        c.location === category.location
+      ) {
+        console.log(true);
+        exists = true;
+      }
+    });
+    console.log('false');
+    return exists;
+  }
+
+  getCategoriesSortedByDescripton(): Category[] {
     return this.allCategories().sort((a, b) => {
       if (a.description < b.description) return -1;
       if (a.description > b.description) return 1;
+      return 0;
+    });
+  }
+
+  getCategoriesSortedByLocation(): Category[] {
+    return this.allCategories().sort((a, b) => {
+      if (a.location < b.location) return -1;
+      if (a.location > b.location) return 1;
       return 0;
     });
   }
@@ -353,6 +376,22 @@ export class DataService {
       this.deleteOrderedArticle(id);
     } catch (error) {
       console.error('Fout bij het verwijderen van het document: ', error);
+    }
+  }
+
+  async addCategory(newCategory: Category) {
+    console.log('newCategory');
+    console.log(newCategory);
+
+    newCategory.description = this.toUppercase(newCategory.description);
+    delete newCategory.id;
+
+    try {
+      const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Categories/');
+      const docRef = await addDoc(colRef, newCategory);
+      console.log('id: ' + docRef.id);
+    } catch (error) {
+      console.log(error);
     }
   }
 

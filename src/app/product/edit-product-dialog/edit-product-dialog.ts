@@ -1,11 +1,5 @@
 import { Component, forwardRef, inject, Inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -13,7 +7,6 @@ import {
   MatDialog,
   MatDialogModule,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DataService } from '../../data/data.service';
@@ -48,9 +41,8 @@ import { ConfirmationDialog } from '../../confirmation-dialog/confirmation-dialo
 export class EditProductDialog {
   confirmationDialog = inject(MatDialog);
   dataService = inject(DataService);
-  categories = this.dataService.getCategoriesSorted();
+  categories = this.dataService.getCategoriesSortedByDescripton();
   shops = this.dataService.getShopsSorted();
-  dialogTitle: string = 'Aanpassen product';
   form: FormGroup;
 
   constructor(

@@ -10,14 +10,11 @@
       <hr />
     </header>
     <main>
-      <table>
-        <p>
-          @for (article of orderedArticles(); track article.id) {
-            <app-in-winkel-item [article]="article" />
-          }
-        </p>
-      </table>
-      <!-- <hr /> -->
+      <p>
+        @for (article of orderedArticles(); track article.id) {
+          <app-in-winkel-item [article]="article" />
+        }
+      </p>
     </main>
   </div>
 </body>

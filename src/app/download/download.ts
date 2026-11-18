@@ -24,7 +24,7 @@ export class Download {
   }
 
   onDownloadCategories() {
-    const categories = JSON.stringify(this.dataService.getCategoriesSorted());
+    const categories = JSON.stringify(this.dataService.getCategoriesSortedByDescripton());
     const filename = 'categories_' + this.now();
     this.downloadService.download(categories, filename);
   }

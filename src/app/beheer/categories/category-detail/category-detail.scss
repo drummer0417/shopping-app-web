@@ -1,0 +1,16 @@
+.table-container {
+    width: 100%;
+    overflow-x: visible;
+    border-collapse: collapse;
+    -webkit-overflow-scrolling: touch;
+}
+
+td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+hr {
+    margin-top: 0px;
+    margin-bottom: -10px;
+}

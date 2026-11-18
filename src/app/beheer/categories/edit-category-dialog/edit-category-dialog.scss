@@ -1,0 +1,55 @@
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+        width: 99%;
+    }
+}
+
+mat-form-field {
+    width: 100%;
+    min-width: 0;
+}
+
+.triple-button-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    /* Zorgt dat ze verticaal mooi uitlijnen */
+}
+
+.btn-cancel {
+    background-color: inherit;
+    margin-right: 24px;
+}
+
+.btn-delete {
+    background-color: inherit;
+    color: rgb(252, 53, 53);
+}
+
+.triple-button-container>div {
+    flex: 1;
+    display: flex;
+}
+
+.column-left {
+    justify-content: flex-start;
+}
+
+.column-right {
+    justify-content: flex-end;
+    padding-right: 0px;
+}
+
+td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    /* Voor oudere browsers */
+}

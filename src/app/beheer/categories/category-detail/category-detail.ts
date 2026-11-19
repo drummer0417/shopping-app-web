@@ -18,8 +18,6 @@ export class CategorieDetail {
   private dataService = inject(DataService);
 
   updateCategory() {
-    console.log('update category');
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.maxWidth = '800px';
@@ -37,10 +35,10 @@ export class CategorieDetail {
           duration: 5000,
         });
       } else if (result.action === 'delete') {
-        console.log('in action delete');
-
-        // this.dataService.deleteCategory(result.category.id);
-        this.snackBar.open(result.category.description + ' verwijderd', '', { duration: 5000 });
+        this.dataService.deleteCategory(result.category.id);
+        this.snackBar.open('Categorie "' + result.category.description + "'" + ' verwijderd', '', {
+          duration: 5000,
+        });
       }
     });
   }

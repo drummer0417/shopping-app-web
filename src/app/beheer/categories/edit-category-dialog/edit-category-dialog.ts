@@ -36,7 +36,7 @@ export class EditCategoryDialog {
   confirmationDialog = inject(MatDialog);
   dataService = inject(DataService);
   form: FormGroup;
-  allreadyExists: boolean = false;
+  errorMessage: string | undefined = undefined;
 
   constructor(
     private fb: FormBuilder,
@@ -51,13 +51,10 @@ export class EditCategoryDialog {
   }
 
   onSave() {
-    console.log('this.data.title');
-    console.log(this.data.title);
-
     const category: Category = this.form.value;
     if (this.data.title.startsWith('Toevoegen') && this.dataService.categoryExists(category)) {
-      this.allreadyExists = true;
-      console.log('bestaat al...............');
+      this.errorMessage =
+        'Categorie met deze naam en/of locatie bestaat al. Kies andere naam of locatie.';
     } else {
       this.dialogRef.close({ action: 'save', category: this.form.value });
     }
@@ -68,12 +65,15 @@ export class EditCategoryDialog {
   }
 
   onDelete() {
-    console.log('open confirmation');
-
-    this.openConfirmDialog();
+    const category: Category = this.form.value;
+    if (this.dataService.isCategoryUsed(category)) {
+      this.errorMessage = 'Categorie wordt in een of meer producten gebruikt.';
+    } else {
+      this.confirm();
+    }
   }
 
-  openConfirmDialog(): void {
+  confirm(): void {
     const dialogRef = this.confirmationDialog.open(ConfirmationDialog, {
       width: '350px',
       data: {

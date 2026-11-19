@@ -33,8 +33,8 @@ export class Categories {
 
     dialogRef.afterClosed().subscribe((result: { action: string; category: Category }) => {
       if (result.action === 'save') {
-        // this.dataservice.updateCategory(result.category);
-        this.snackBar.open('Categorie ' + result.category.description + ' toegevoegd', '', {
+        this.dataservice.addCategory(result.category);
+        this.snackBar.open('Categorie "' + result.category.description + '" toegevoegd', '', {
           duration: 5000,
         });
       }

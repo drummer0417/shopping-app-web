@@ -164,12 +164,20 @@ export class DataService {
         c.description.toUpperCase() === category.description.toUpperCase() ||
         c.location === category.location
       ) {
-        console.log(true);
         exists = true;
       }
     });
-    console.log('false');
     return exists;
+  }
+
+  isCategoryUsed(category: Category): boolean {
+    var used = false;
+    this.allArticles().forEach((article) => {
+      if (article.category.id === category.id) {
+        used = true;
+      }
+    });
+    return used;
   }
 
   getCategoriesSortedByDescripton(): Category[] {
@@ -197,14 +205,10 @@ export class DataService {
   }
 
   getAmountOrderd() {
-    console.log('in getAmountOrderd');
-
     var totalAmount = 0;
     this.getOrderedArticles().forEach((article) => {
       totalAmount = totalAmount + article.ordered * article.price;
     });
-    console.log('total amount: ' + totalAmount);
-
     return totalAmount;
   }
 
@@ -379,17 +383,22 @@ export class DataService {
     }
   }
 
-  async addCategory(newCategory: Category) {
-    console.log('newCategory');
-    console.log(newCategory);
+  async deleteCategory(id?: string) {
+    const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Categories/' + id);
+    try {
+      await deleteDoc(docRef);
+    } catch (error) {
+      console.error('Fout bij het verwijderen van het document: ', error);
+    }
+  }
 
+  async addCategory(newCategory: Category) {
     newCategory.description = this.toUppercase(newCategory.description);
     delete newCategory.id;
 
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Categories/');
       const docRef = await addDoc(colRef, newCategory);
-      console.log('id: ' + docRef.id);
     } catch (error) {
       console.log(error);
     }

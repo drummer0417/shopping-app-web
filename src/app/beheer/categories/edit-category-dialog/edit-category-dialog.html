@@ -15,9 +15,9 @@
       </mat-form-field>
     </div>
 
-    @if (allreadyExists) {
+    @if (errorMessage) {
       <mat-error>
-        Categorie met deze naam en/of locatie bestaat al. Kies andere naam of locatie.
+        {{ errorMessage }}
       </mat-error>
     }
   </mat-dialog-content>

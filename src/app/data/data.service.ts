@@ -10,6 +10,7 @@ import {
   updateDoc,
   Timestamp,
   setDoc,
+  writeBatch,
 } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
 import { Auth, authState } from '@angular/fire/auth';
@@ -339,11 +340,11 @@ export class DataService {
       updatedArticle.description = this.toUppercase(updatedArticle.description);
       updatedArticle.brand = this.toUppercase(updatedArticle.brand);
       updatedArticle.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
-
       const docRef = doc(
         this.firestore,
         'Users/' + this.queryUser + '/Articles/' + updatedArticle.id,
       );
+
       await updateDoc(docRef, {
         brand: updatedArticle.brand,
         category: updatedArticle.category,
@@ -360,6 +361,57 @@ export class DataService {
       console.error('Error updating document: ', error);
     }
     return null;
+  }
+
+  async updateCategory(updatedCategory: Category) {
+    try {
+      updatedCategory.description = this.toUppercase(updatedCategory.description);
+      updatedCategory.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
+      console.log(updatedCategory);
+
+      const docRef = doc(
+        this.firestore,
+        'Users/' + this.queryUser + '/Categories/' + updatedCategory.id,
+      );
+      await updateDoc(docRef, {
+        description: updatedCategory.description,
+        dateModified: updatedCategory.dateModified,
+        location: updatedCategory.location,
+      });
+
+      // find all articles which use this category
+      const articlesToUpdate: Article[] = [];
+      this.allArticles().forEach((article: Article) => {
+        if (article.category.id === updatedCategory.id) {
+          console.log('update article: ' + article.description);
+          article.category = updatedCategory;
+          articlesToUpdate.push(article);
+        }
+      });
+      this.executeArticleBatchUpdate(articlesToUpdate);
+    } catch (error) {
+      console.error('Error updating document: ', error);
+    }
+    return null;
+  }
+
+  async executeArticleBatchUpdate(articles: Article[]) {
+    // 1. Initialiseer de batch
+    const batch = writeBatch(this.firestore);
+
+    // 2. Voeg update-, set- of delete-operaties toe
+    articles.forEach((article) => {
+      const docRef = doc(this.firestore, 'Users/' + this.queryUser + '/Articles/' + article.id);
+      batch.update(docRef, {
+        category: article.category,
+      });
+    });
+
+    // 3. Voer alle operaties tegelijk uit (retourneert een Promise)
+    await batch
+      .commit()
+      .catch((error) => console.log(error))
+      .finally(() => this.articles.set(this.sortArticles(this.articles())));
   }
 
   private updateArticlesSignal(updatedArticle: Article) {
@@ -394,7 +446,7 @@ export class DataService {
 
   async addCategory(newCategory: Category) {
     newCategory.description = this.toUppercase(newCategory.description);
-    delete newCategory.id;
+    newCategory.dateModified = new Timestamp(new Date().getTime() / 1000, 0);
 
     try {
       const colRef = collection(this.firestore, 'Users/' + this.queryUser + '/Categories/');
